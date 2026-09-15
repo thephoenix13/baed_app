@@ -7,14 +7,22 @@ interface ProcessingScreenProps {
 export function ProcessingScreen({ onComplete }: ProcessingScreenProps) {
   const [progress, setProgress] = useState(0);
   const [step, setStep] = useState(0);
-  const steps = ['Checking document...', 'Matching your face...', 'Running security checks...', 'Finalizing...'];
+  const [isComplete, setIsComplete] = useState(false);
+
+  const steps = [
+    'Checking your ID…',
+    'Matching your selfie…',
+    'Almost done…',
+    'Finalizing…',
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          onComplete(true);
+          setIsComplete(true);
+          setTimeout(() => onComplete(true), 800);
           return 100;
         }
         return prev + 2;
@@ -30,20 +38,60 @@ export function ProcessingScreen({ onComplete }: ProcessingScreenProps) {
   return (
     <div className="min-h-dvh bg-[var(--color-bg)] flex flex-col items-center justify-center px-6">
       <div className="text-center max-w-sm">
-        {/* Spinner */}
-        <div className="w-16 h-16 rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-accent)] animate-spin mx-auto mb-8" />
-
-        <h2 className="text-section-title mb-2">Verifying your identity</h2>
-        <p className="text-body-secondary mb-6">{steps[step]}</p>
-
-        {/* Progress bar */}
-        <div className="w-full bg-[var(--color-bg-chip)] rounded-full h-1 mb-3">
-          <div
-            className="bg-[var(--color-accent)] h-1 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
+        {/* Minimal animated verification indicator */}
+        <div className="mb-12">
+          {isComplete ? (
+            <div className="animate-fade-in">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mx-auto">
+                <circle cx="12" cy="12" r="10" stroke="var(--color-success)" strokeWidth="1.5" />
+                <path d="M8 12l2.5 2.5L16 9" stroke="var(--color-success)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          ) : (
+            <div className="animate-pulse-soft">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mx-auto">
+                <circle cx="12" cy="12" r="10" stroke="var(--color-accent)" strokeWidth="1.5" opacity="0.3" />
+                <path d="M12 2a10 10 0 0 1 10 10" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinecap="round">
+                  <animateTransform
+                    attributeName="transform"
+                    type="rotate"
+                    from="0 12 12"
+                    to="360 12 12"
+                    dur="1.5s"
+                    repeatCount="indefinite"
+                  />
+                </path>
+              </svg>
+            </div>
+          )}
         </div>
-        <p className="text-small">This usually takes less than a minute</p>
+
+        {/* Title */}
+        <h2 className="text-section-title mb-3">
+          {isComplete ? 'Verification complete' : 'Verifying your identity'}
+        </h2>
+
+        {/* Supporting text */}
+        <p className="text-body-secondary mb-8">
+          {isComplete ? 'You can now continue.' : steps[step]}
+        </p>
+
+        {/* Thin elegant progress indicator */}
+        {!isComplete && (
+          <div className="w-full bg-[var(--color-bg-chip)] rounded-full h-0.5 mb-4">
+            <div
+              className="bg-[var(--color-accent)] h-0.5 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        )}
+
+        {/* Reassurance */}
+        {!isComplete && (
+          <p className="text-small text-[var(--color-text-tertiary)]">
+            This usually takes less than a minute
+          </p>
+        )}
       </div>
     </div>
   );
