@@ -1,8 +1,7 @@
 /**
- * Welcome Screen — Redesigned
+ * Welcome Screen — Native App Style
  *
- * Premium editorial feel. Warm, confident, unhurried.
- * Mobile-first, breathable, trust-focused.
+ * Compact, native mobile app feel. Not a website.
  */
 
 interface WelcomeScreenProps {
@@ -12,10 +11,10 @@ interface WelcomeScreenProps {
 export function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
   return (
     <div className="min-h-screen bg-cream flex flex-col">
-      {/* Hero Section — Editorial, Breathable */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
-        {/* Verified Badge — Credential, not decoration */}
-        <div className="mb-12">
+      {/* Hero Section — Compact */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
+        {/* Verified Badge */}
+        <div className="mb-8">
           <div className="verified-badge verified-badge-large">
             <svg
               className="verified-badge-icon"
@@ -31,31 +30,31 @@ export function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
           </div>
         </div>
 
-        {/* Headline — DM Serif Display, Editorial */}
-        <h1 className="text-hero text-plum mb-6 font-display">
+        {/* Headline */}
+        <h1 className="text-hero text-plum mb-4 font-display">
           Dating,
           <br />
           without the doubt.
         </h1>
 
-        {/* Subheadline — Warm, Confident */}
-        <p className="text-lead max-w-sm mb-12">
+        {/* Subheadline */}
+        <p className="text-lead max-w-xs mb-8">
           Every person verifies their identity.
           <br />
           Real people. Real connections.
         </p>
       </div>
 
-      {/* CTA Section — Sticky, Mobile-native */}
-      <div className="px-6 pb-8">
+      {/* CTA Section */}
+      <div className="px-4 pb-6">
         <button
           onClick={onGetStarted}
-          className="btn btn-primary w-full mb-4"
+          className="btn btn-primary w-full mb-3"
         >
           Get Started
         </button>
 
-        <p className="text-small text-stone text-center">
+        <p className="text-tiny text-stone text-center">
           By continuing, you agree to our{' '}
           <a href="/terms" className="text-plum underline">
             Terms
