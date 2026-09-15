@@ -46,7 +46,9 @@ export function MatchesScreen({ userId, onOpenChat, newMatch, onDismissMatch }: 
       {/* Header */}
       <div className="page-header">
         <h1 className="text-screen-title">Matches</h1>
-        <p className="text-caption mt-1">{matches.length} connections</p>
+        <p className="text-caption mt-1">
+          {matches.length === 0 ? '0 matches yet' : `${matches.length} ${matches.length === 1 ? 'match' : 'matches'}`}
+        </p>
       </div>
 
       <div className="page-content">
@@ -65,13 +67,17 @@ export function MatchesScreen({ userId, onOpenChat, newMatch, onDismissMatch }: 
                         onClick={() => onOpenChat(match.id)}
                         className="flex-shrink-0 text-center"
                       >
-                        <div className="avatar avatar-lg bg-[var(--color-bg-chip)] mb-2">
-                          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" strokeWidth="1">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                          </svg>
+                        <div className="avatar avatar-lg bg-gradient-to-br from-[#E8B4B8] to-[#D4A5A5] mb-2 relative">
+                          {partner.isVerified && (
+                            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center border-2 border-[var(--color-bg)]">
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="3">
+                                <path d="M9 12l2 2 4-4" />
+                              </svg>
+                            </div>
+                          )}
                         </div>
                         <p className="text-caption font-medium">{partner.displayName}</p>
+                        <p className="text-small">{partner.age}</p>
                       </button>
                     );
                   })}
@@ -91,23 +97,21 @@ export function MatchesScreen({ userId, onOpenChat, newMatch, onDismissMatch }: 
                       onClick={() => onOpenChat(match.id)}
                       className={`list-row w-full px-5 ${i < matches.length - 1 ? 'border-b border-[var(--color-border)]' : ''}`}
                     >
-                      <div className="avatar avatar-md bg-[var(--color-bg-chip)]">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" strokeWidth="1">
-                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                          <circle cx="12" cy="7" r="4" />
-                        </svg>
+                      <div className="avatar avatar-md bg-gradient-to-br from-[#E8B4B8] to-[#D4A5A5] relative">
+                        {partner.isVerified && (
+                          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center border-2 border-[var(--color-bg)]">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="3">
+                              <path d="M9 12l2 2 4-4" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 text-left">
                         <div className="flex items-center gap-1.5">
                           <p className="text-body font-medium">{partner.displayName}</p>
-                          {partner.isVerified && (
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2">
-                              <path d="M9 12l2 2 4-4" />
-                              <circle cx="12" cy="12" r="10" />
-                            </svg>
-                          )}
+                          <p className="text-body-secondary">{partner.age}</p>
                         </div>
-                        <p className="text-caption">{partner.age} · {partner.city}</p>
+                        <p className="text-caption">{partner.city}</p>
                       </div>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" strokeWidth="2">
                         <polyline points="9 18 15 12 9 6" />
@@ -125,14 +129,24 @@ export function MatchesScreen({ userId, onOpenChat, newMatch, onDismissMatch }: 
             </div>
           </>
         ) : (
-          <div className="empty-state" style={{ minHeight: '50vh' }}>
+          <div className="empty-state" style={{ minHeight: '60vh' }}>
             <div className="empty-state-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                <line x1="9" y1="9" x2="9.01" y2="9" />
+                <line x1="15" y1="9" x2="15.01" y2="9" />
               </svg>
             </div>
-            <p className="text-section-title mb-2">No matches yet</p>
-            <p className="text-body-secondary">Keep swiping to find your match</p>
+            <p className="text-section-title mb-2">Your matches will appear here</p>
+            <p className="text-body-secondary mb-8">When someone likes you back, you'll find them here.</p>
+            <button 
+              onClick={() => window.location.hash = '#/discover'}
+              className="btn btn-primary"
+              style={{ width: 'auto', padding: '0 32px' }}
+            >
+              Discover people
+            </button>
           </div>
         )}
       </div>
