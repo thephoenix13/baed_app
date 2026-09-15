@@ -64,44 +64,55 @@ export function MatchesScreen({
         </h1>
       </header>
 
-      {/* Match Animation Overlay */}
+      {/* Match Animation Overlay — Editorial, Premium */}
       {showMatchAnimation && newMatch && (
-        <div className="fixed inset-0 bg-plum/90 z-50 flex items-center justify-center px-6">
+        <div className="fixed inset-0 bg-plum-deep z-50 flex items-center justify-center px-6">
           <div className="text-center">
-            <div className="mb-6">
-              <h2 className="text-hero text-pink mb-2" style={fontDisplay.style}>
-                It's a Match!
+            {/* Verified Badge — Hero Moment */}
+            <div className="mb-8">
+              <div className="verified-badge verified-badge-large mx-auto mb-6" style={{ borderColor: 'white', backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                <svg className="verified-badge-icon" style={{ color: 'white' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M9 12l2 2 4-4" />
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                <span className="verified-badge-text" style={{ color: 'white' }}>Verified Match</span>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-hero text-white mb-4 font-display">
+                It's a Match
               </h2>
-              <p className="text-lead text-pink-light">
+              <p className="text-lead text-white/70">
                 You and {getPartner(newMatch).displayName} liked each other
               </p>
             </div>
 
-            {/* Profile Photos */}
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-24 h-24 bg-pink-pale rounded-full flex items-center justify-center border-4 border-pink">
-                <svg className="w-12 h-12 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            {/* Profile Photos — Minimal */}
+            <div className="flex items-center justify-center gap-6 mb-12">
+              <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center border-2 border-white/30">
+                <svg className="w-12 h-12 text-white/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
-              <div className="w-12 h-12 bg-pink rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-rose rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
               </div>
-              <div className="w-24 h-24 bg-pink-pale rounded-full flex items-center justify-center border-4 border-pink">
-                <svg className="w-12 h-12 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center border-2 border-white/30">
+                <svg className="w-12 h-12 text-white/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
             </div>
 
-            <button onClick={handleDismissMatch} className="btn btn-secondary w-full mb-3">
+            <button onClick={handleDismissMatch} className="btn btn-primary w-full mb-3">
               Send a Message
             </button>
-            <button onClick={handleDismissMatch} className="btn btn-ghost w-full !border-white !text-white">
+            <button onClick={handleDismissMatch} className="btn btn-ghost w-full !border-white/30 !text-white hover:!bg-white/10">
               Keep Swiping
             </button>
           </div>

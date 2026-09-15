@@ -1,11 +1,9 @@
 /**
- * Welcome Screen
+ * Welcome Screen — Redesigned
  *
- * Landing screen for new users.
- * No SMS/OTP validation — goes directly to verification.
+ * Premium editorial feel. Warm, confident, unhurried.
+ * Mobile-first, breathable, trust-focused.
  */
-
-import { fontDisplay, fontSans } from '@/lib/fonts';
 
 interface WelcomeScreenProps {
   onGetStarted: () => void;
@@ -14,60 +12,50 @@ interface WelcomeScreenProps {
 export function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
   return (
     <div className="min-h-screen bg-cream flex flex-col">
-      {/* Hero Section */}
+      {/* Hero Section — Editorial, Breathable */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
-        {/* Brand Mark */}
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-pink-pale">
+        {/* Verified Badge — Credential, not decoration */}
+        <div className="mb-12">
+          <div className="verified-badge verified-badge-large">
             <svg
-              className="w-4 h-4 text-verified-green"
+              className="verified-badge-icon"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.5"
             >
               <path d="M9 12l2 2 4-4" />
               <circle cx="12" cy="12" r="10" />
             </svg>
-            <span className="text-label text-plum">Verified-First</span>
+            <span className="verified-badge-text">Verified-First</span>
           </div>
         </div>
 
-        {/* Headline */}
-        <h1
-          className="text-h1 text-plum mb-4"
-          style={fontDisplay.style}
-        >
-          Real people.
+        {/* Headline — DM Serif Display, Editorial */}
+        <h1 className="text-hero text-plum mb-6 font-display">
+          Dating,
           <br />
-          Real connections.
+          without the doubt.
         </h1>
 
-        {/* Subheadline */}
-        <p className="text-lead max-w-sm mb-8">
-          Every person on Bae'd verifies their identity.
-          No catfishing. No games. Just genuine connections.
+        {/* Subheadline — Warm, Confident */}
+        <p className="text-lead max-w-sm mb-12">
+          Every person verifies their identity.
+          <br />
+          Real people. Real connections.
         </p>
-
-        {/* Feature Pills */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          <span className="pill">ID Verified</span>
-          <span className="pill">Selfie Match</span>
-          <span className="pill">Safe Dating</span>
-        </div>
       </div>
 
-      {/* CTA Section */}
+      {/* CTA Section — Sticky, Mobile-native */}
       <div className="px-6 pb-8">
         <button
           onClick={onGetStarted}
-          className="btn btn-primary w-full mb-3"
-          style={fontSans.style}
+          className="btn btn-primary w-full mb-4"
         >
           Get Started
         </button>
 
-        <p className="text-body text-muted text-center text-sm">
+        <p className="text-small text-stone text-center">
           By continuing, you agree to our{' '}
           <a href="/terms" className="text-plum underline">
             Terms
