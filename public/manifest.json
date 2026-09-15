@@ -1,0 +1,47 @@
+{
+  "name": "Bae'd — Dating, without the doubt",
+  "short_name": "Bae'd",
+  "description": "India's verified-first dating app. Trust is the mechanism; connection is the promise.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FDF7F0",
+  "theme_color": "#1B0B2C",
+  "lang": "en",
+  "categories": ["social", "dating", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Discover",
+      "short_name": "Discover",
+      "url": "/discover",
+      "description": "Find your match"
+    },
+    {
+      "name": "Matches",
+      "short_name": "Matches",
+      "url": "/matches",
+      "description": "View your matches"
+    }
+  ]
+}
