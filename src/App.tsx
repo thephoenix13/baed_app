@@ -36,6 +36,7 @@ import { FiltersScreen } from '@/app/screens/discovery/FiltersScreen';
 import { MatchesScreen } from '@/app/screens/matches/MatchesScreen';
 import { ChatScreen } from '@/app/screens/chat/ChatScreen';
 import { SettingsScreen } from '@/app/screens/settings/SettingsScreen';
+import { HomeScreen } from '@/app/screens/HomeScreen';
 import { useAuthStore } from '@/stores/auth-store';
 import type { Match } from '@/modules/matching/types/matching.types';
 
@@ -64,12 +65,15 @@ type Screen =
   | 'profile-bio'
   | 'profile-interests'
   | 'profile-preview'
+  | 'home'
   | 'discover'
   | 'profile-detail'
   | 'filters'
   | 'matches'
   | 'chat'
-  | 'settings';
+  | 'settings'
+  | 'admin-verification'
+  | 'admin-moderation';
 
 type Tab = 'discover' | 'matches' | 'chat' | 'settings';
 
@@ -101,8 +105,7 @@ export default function App() {
   }, []);
 
   const handleProfileComplete = useCallback(() => {
-    setScreen('discover');
-    setActiveTab('discover');
+    setScreen('home');
   }, []);
 
   const handleTabChange = useCallback((tab: Tab) => {
@@ -130,7 +133,7 @@ export default function App() {
   const userId = 'demo-user-001';
 
   // Show bottom nav for main app screens
-  const showBottomNav = ['discover', 'matches', 'chat', 'settings'].includes(screen);
+  const showBottomNav = ['home', 'discover', 'matches', 'chat', 'settings'].includes(screen);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -228,6 +231,14 @@ export default function App() {
           <ProfilePreviewScreen
             onSubmit={handleProfileComplete}
             onBack={() => setScreen('profile-interests')}
+          />
+        )}
+
+        {/* Home Screen */}
+        {screen === 'home' && (
+          <HomeScreen
+            onAdminVerification={() => setScreen('admin-verification')}
+            onAdminModeration={() => setScreen('admin-moderation')}
           />
         )}
 
