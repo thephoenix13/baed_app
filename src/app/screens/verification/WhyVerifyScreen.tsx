@@ -6,67 +6,86 @@ interface WhyVerifyScreenProps {
 export function WhyVerifyScreen({ onContinue, onBack }: WhyVerifyScreenProps) {
   return (
     <div className="page flex flex-col">
-      {/* Header */}
-      <div className="page-header flex items-center">
+      {/* Header with back button and progress */}
+      <div className="page-header flex items-center justify-between">
         <button onClick={onBack} className="btn-icon -ml-3" aria-label="Back">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
+        {/* Progress indicator */}
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-[var(--color-accent)]"></div>
+          <div className="w-2 h-2 rounded-full bg-[var(--color-border)]"></div>
+          <div className="w-2 h-2 rounded-full bg-[var(--color-border)]"></div>
+        </div>
       </div>
 
       <div className="page-content flex-1 flex flex-col">
-        {/* Icon */}
-        <div className="w-14 h-14 rounded-full bg-[var(--color-success-light)] flex items-center justify-center mb-6">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="1.5">
-            <path d="M9 12l2 2 4-4" />
-            <circle cx="12" cy="12" r="10" />
-          </svg>
+        {/* Hero section */}
+        <div className="mb-12">
+          {/* Minimal verification icon */}
+          <div className="mb-8">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-screen-title mb-3">
+            Real people. Real connections.
+          </h1>
+          
+          {/* Supporting text */}
+          <p className="text-body-secondary">
+            Everyone here verifies their identity. It keeps the community safer and more genuine.
+          </p>
         </div>
 
-        {/* Title */}
-        <h1 className="text-screen-title mb-3">Why verify?</h1>
-        <p className="text-body-secondary mb-8">
-          We verify every person so you can date with confidence. No catfishing. No fake profiles.
-        </p>
+        {/* Benefits - simple rows */}
+        <div className="space-y-6 mb-12 flex-1">
+          {/* Benefit 1 */}
+          <div className="flex items-start gap-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" className="flex-shrink-0 mt-0.5">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            <div>
+              <p className="text-body font-medium mb-1">Real people</p>
+              <p className="text-caption">Every profile belongs to a verified person.</p>
+            </div>
+          </div>
 
-        {/* Benefits */}
-        <div className="space-y-5 mb-8 flex-1">
+          {/* Benefit 2 */}
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 rounded-full bg-[var(--color-bg-chip)] flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-caption font-medium">1</span>
-            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" className="flex-shrink-0 mt-0.5">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
             <div>
-              <p className="text-body font-medium mb-0.5">You're safe</p>
-              <p className="text-caption">Verified by government ID and selfie match</p>
+              <p className="text-body font-medium mb-1">Safer conversations</p>
+              <p className="text-caption">Verification helps reduce fake and abusive accounts.</p>
             </div>
           </div>
+
+          {/* Benefit 3 */}
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 rounded-full bg-[var(--color-bg-chip)] flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-caption font-medium">2</span>
-            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" className="flex-shrink-0 mt-0.5">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
             <div>
-              <p className="text-body font-medium mb-0.5">Better matches</p>
-              <p className="text-caption">Real people means real connections</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-4">
-            <div className="w-8 h-8 rounded-full bg-[var(--color-bg-chip)] flex items-center justify-center flex-shrink-0 mt-0.5">
-              <span className="text-caption font-medium">3</span>
-            </div>
-            <div>
-              <p className="text-body font-medium mb-0.5">Your data is safe</p>
-              <p className="text-caption">We never store your ID document</p>
+              <p className="text-body font-medium mb-1">Better connections</p>
+              <p className="text-caption">Spend less time filtering. More time connecting.</p>
             </div>
           </div>
         </div>
 
-        {/* CTA */}
+        {/* CTA section */}
         <div className="pb-8">
-          <button onClick={onContinue} className="btn btn-primary mb-3">
-            Start Verification
+          <button onClick={onContinue} className="btn btn-primary mb-4">
+            Continue
           </button>
-          <p className="text-small text-center">Takes about 2 minutes</p>
+          <button className="btn btn-ghost w-full">
+            Why do we need this?
+          </button>
         </div>
       </div>
     </div>
