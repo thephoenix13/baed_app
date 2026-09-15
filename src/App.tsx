@@ -132,8 +132,8 @@ export default function App() {
   // Mock user ID for demo
   const userId = 'demo-user-001';
 
-  // Show bottom nav for main app screens
-  const showBottomNav = ['home', 'discover', 'matches', 'chat', 'settings'].includes(screen);
+  // Show bottom nav for main app screens (except discover which has its own)
+  const showBottomNav = ['home', 'matches', 'chat', 'settings'].includes(screen);
 
   return (
     <QueryClientProvider client={queryClient}>

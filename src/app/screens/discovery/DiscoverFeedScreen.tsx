@@ -20,6 +20,7 @@ export function DiscoverFeedScreen({
   const [profiles, setProfiles] = useState<CandidateProfile[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
 
   useEffect(() => {
     loadProfiles();
@@ -63,10 +64,28 @@ export function DiscoverFeedScreen({
   const hasMore = currentIndex < profiles.length;
 
   return (
-    <div className="page" style={{ paddingBottom: 88 }}>
+    <div className="min-h-screen bg-[var(--color-bg)] flex flex-col">
       {/* Header */}
-      <div className="page-header flex items-center justify-between">
-        <h1 className="text-screen-title">Discover</h1>
+      <div className="flex items-center justify-between px-6 pt-14 pb-4">
+        {/* Brand wordmark */}
+        <div className="flex items-center gap-2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 2C9.5 2 7.5 4 7.5 6.5C7.5 9 9.5 11 12 11C14.5 11 16.5 9 16.5 6.5C16.5 4 14.5 2 12 2Z"
+              fill="var(--color-accent)"
+              opacity="0.2"
+            />
+            <path
+              d="M12 20L12 11"
+              stroke="var(--color-accent)"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+          <span className="text-body font-medium">Bae'd</span>
+        </div>
+
+        {/* Filter button */}
         <button onClick={onOpenFilters} className="btn-icon" aria-label="Filters">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <line x1="4" y1="21" x2="4" y2="14" />
@@ -82,85 +101,162 @@ export function DiscoverFeedScreen({
         </button>
       </div>
 
-      {/* Card */}
-      <div className="px-6">
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col px-4 pb-4">
         {hasMore && currentProfile ? (
-          <div
-            className={`profile-card transition-all duration-250 ${
-              swipeDirection === 'left'
-                ? '-translate-x-[120%] -rotate-12 opacity-0'
-                : swipeDirection === 'right'
-                ? 'translate-x-[120%] rotate-12 opacity-0'
-                : ''
-            }`}
-          >
-            {/* Photo placeholder */}
-            <div className="absolute inset-0 bg-[var(--color-bg-chip)] flex items-center justify-center">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" strokeWidth="1">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
+          <>
+            {/* Profile card - 80% of screen */}
+            <div className="flex-1 flex items-center justify-center mb-4">
+              <div
+                className={`relative w-full aspect-[3/4] max-h-[calc(100vh-280px)] rounded-[24px] overflow-hidden shadow-[var(--shadow-lg)] transition-transform duration-300 ease-out ${
+                  swipeDirection === 'left'
+                    ? '-translate-x-[150%] -rotate-[20deg] opacity-0'
+                    : swipeDirection === 'right'
+                    ? 'translate-x-[150%] rotate-[20deg] opacity-0'
+                    : ''
+                }`}
+                style={{
+                  transform: swipeDirection ? undefined : `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
+                }}
+              >
+                {/* Beautiful gradient placeholder (not grey person icon) */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#E8B4B8] via-[#D4A5A5] to-[#C99A9D]"></div>
+                
+                {/* Subtle texture overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+
+                {/* LIKE/PASS feedback */}
+                {dragOffset > 50 && (
+                  <div className="absolute top-8 left-8 px-4 py-2 bg-[var(--color-success)] text-white rounded-lg font-semibold text-lg rotate-[-20deg] border-2 border-white">
+                    LIKE
+                  </div>
+                )}
+                {dragOffset < -50 && (
+                  <div className="absolute top-8 right-8 px-4 py-2 bg-[var(--color-error)] text-white rounded-lg font-semibold text-lg rotate-[20deg] border-2 border-white">
+                    PASS
+                  </div>
+                )}
+
+                {/* Profile info overlay at bottom */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  {/* Name, age, verified */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <h2 className="text-[32px] font-semibold">{currentProfile.displayName}</h2>
+                    <span className="text-[32px] font-light">{currentProfile.age}</span>
+                    {currentProfile.isVerified && (
+                      <div className="flex items-center gap-1 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M9 12l2 2 4-4" />
+                          <circle cx="12" cy="12" r="10" />
+                        </svg>
+                        <span className="text-xs font-medium">Verified</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Occupation and location */}
+                  <div className="mb-3">
+                    <p className="text-[15px] text-white/90 mb-1">{currentProfile.occupation}</p>
+                    <p className="text-[13px] text-white/70">{currentProfile.city} · {currentProfile.distance} km away</p>
+                  </div>
+
+                  {/* Short bio */}
+                  <p className="text-[14px] text-white/80 mb-3 line-clamp-2">
+                    {currentProfile.bio || "Designing things by day. Looking for someone to explore the city with."}
+                  </p>
+
+                  {/* Interest tags */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {currentProfile.interests.slice(0, 3).map((interest) => (
+                      <span
+                        key={interest}
+                        className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium"
+                      >
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Info overlay */}
-            <div className="profile-card-info">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[22px] font-semibold">{currentProfile.displayName}</span>
-                <span className="text-[22px] font-light">{currentProfile.age}</span>
-                {currentProfile.isVerified && (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" opacity="0.9">
-                    <path d="M9 12l2 2 4-4" />
-                    <circle cx="12" cy="12" r="10" />
-                  </svg>
-                )}
-              </div>
-              <p className="text-[15px] text-white/80">{currentProfile.occupation}</p>
-              <p className="text-[13px] text-white/60 mt-0.5">{currentProfile.city} · {currentProfile.distance} km</p>
+            {/* Action buttons - floating */}
+            <div className="flex items-center justify-center gap-6 py-4">
+              {/* Pass button */}
+              <button
+                onClick={handlePass}
+                className="w-16 h-16 rounded-full bg-white border-2 border-[var(--color-error)] flex items-center justify-center shadow-[var(--shadow-md)] hover:scale-110 transition-transform active:scale-95"
+                aria-label="Pass"
+              >
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-error)" strokeWidth="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+
+              {/* Like button */}
+              <button
+                onClick={handleLike}
+                className="w-20 h-20 rounded-full bg-[var(--color-accent)] flex items-center justify-center shadow-[var(--shadow-lg)] hover:scale-110 transition-transform active:scale-95"
+                aria-label="Like"
+              >
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+              </button>
             </div>
-          </div>
+          </>
         ) : (
-          <div className="empty-state" style={{ minHeight: '60vh' }}>
-            <div className="empty-state-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          /* Empty state */
+          <div className="flex-1 flex flex-col items-center justify-center px-6">
+            <div className="w-16 h-16 rounded-full bg-[var(--color-bg-chip)] flex items-center justify-center mb-6">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" strokeWidth="1.5">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M8 14s1.5 2 4 2 4-2 4-2" />
                 <line x1="9" y1="9" x2="9.01" y2="9" />
                 <line x1="15" y1="9" x2="15.01" y2="9" />
               </svg>
             </div>
-            <p className="text-section-title mb-2">No more profiles</p>
-            <p className="text-body-secondary mb-6">Check back later or adjust your filters</p>
-            <button onClick={handleReset} className="btn btn-secondary" style={{ width: 'auto', padding: '0 24px' }}>
+            <h2 className="text-section-title mb-2 text-center">No more profiles</h2>
+            <p className="text-body-secondary mb-8 text-center">Check back later or adjust your filters</p>
+            <button onClick={handleReset} className="btn btn-primary" style={{ width: 'auto', padding: '0 32px' }}>
               Start Over
             </button>
           </div>
         )}
       </div>
 
-      {/* Actions */}
-      {hasMore && (
-        <div className="flex items-center justify-center gap-5 mt-6">
-          <button
-            onClick={handlePass}
-            className="w-14 h-14 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-card)] flex items-center justify-center"
-            aria-label="Pass"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-error)" strokeWidth="2.5">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
+      {/* Bottom navigation */}
+      <nav className="bg-white border-t border-[var(--color-border)] px-6 py-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
+        <div className="flex items-center justify-around">
+          <button className="flex flex-col items-center gap-1 text-[var(--color-accent)]">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
             </svg>
+            <span className="text-xs font-medium">Discover</span>
           </button>
-          <button
-            onClick={handleLike}
-            className="w-16 h-16 rounded-full bg-[var(--color-accent)] flex items-center justify-center"
-            aria-label="Like"
-          >
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="0">
+          <button className="flex flex-col items-center gap-1 text-[var(--color-text-tertiary)]">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
             </svg>
+            <span className="text-xs font-medium">Matches</span>
+          </button>
+          <button className="flex flex-col items-center gap-1 text-[var(--color-text-tertiary)]">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            <span className="text-xs font-medium">Chat</span>
+          </button>
+          <button className="flex flex-col items-center gap-1 text-[var(--color-text-tertiary)]">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span className="text-xs font-medium">Profile</span>
           </button>
         </div>
-      )}
+      </nav>
     </div>
   );
 }
