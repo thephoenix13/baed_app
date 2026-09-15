@@ -1,8 +1,8 @@
 /**
  * Welcome Screen
  *
- * Landing screen for new and returning users.
- * Shows brand promise and CTA to start authentication.
+ * Landing screen for new users.
+ * No SMS/OTP validation — goes directly to verification.
  */
 
 import { fontDisplay, fontSans } from '@/lib/fonts';

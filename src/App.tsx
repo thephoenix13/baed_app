@@ -2,10 +2,11 @@
  * Bae'd — Main App Component
  *
  * Entry point that wires together:
- * - Auth flow (splash → welcome → phone → OTP)
- * - PWA components (install prompt, offline banner)
+ * - Direct entry (no SMS/OTP validation)
+ * - Verification flow
+ * - Profile creation
+ * - PWA components
  * - Toast notifications
- * - TanStack Query provider
  */
 
 import { useState, useCallback } from 'react';
@@ -17,30 +18,53 @@ import { OfflineBanner } from './components/pwa/OfflineBanner';
 import { ToastContainer } from './components/shared/ToastContainer';
 import { SplashScreen } from './app/screens/SplashScreen';
 import { WelcomeScreen } from './app/screens/WelcomeScreen';
-import { PhoneScreen } from './app/screens/PhoneScreen';
-import { OtpScreen } from './app/screens/OtpScreen';
-import { AdminLoginScreen } from './app/screens/AdminLoginScreen';
+import { WhyVerifyScreen } from './app/screens/verification/WhyVerifyScreen';
+import { ConsentScreen } from './app/screens/verification/ConsentScreen';
+import { IdCaptureScreen } from './app/screens/verification/IdCaptureScreen';
+import { SelfieScreen } from './app/screens/verification/SelfieScreen';
+import { ProcessingScreen } from './app/screens/verification/ProcessingScreen';
+import { VerificationResultScreen } from './app/screens/verification/VerificationResultScreen';
+import { ProfileCreateScreen } from './app/screens/profile/ProfileCreateScreen';
+import { ProfilePhotosScreen } from './app/screens/profile/ProfilePhotosScreen';
+import { ProfileBioScreen } from './app/screens/profile/ProfileBioScreen';
+import { ProfileInterestsScreen } from './app/screens/profile/ProfileInterestsScreen';
+import { ProfilePreviewScreen } from './app/screens/profile/ProfilePreviewScreen';
+import { HomeScreen } from './app/screens/HomeScreen';
+import { AdminVerificationScreen } from './app/screens/admin/AdminVerificationScreen';
+import { AdminModerationScreen } from './app/screens/admin/AdminModerationScreen';
 import { useAuthStore } from './stores/auth-store';
-import { useSendOtp } from './hooks/use-auth';
-import type { AdminRole } from './core/auth/permissions';
 
 // Create TanStack Query client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     },
   },
 });
 
 // App screens
-type Screen = 'splash' | 'welcome' | 'phone' | 'otp' | 'home' | 'admin-login';
+type Screen =
+  | 'splash'
+  | 'welcome'
+  | 'why-verify'
+  | 'consent'
+  | 'id-capture'
+  | 'selfie'
+  | 'processing'
+  | 'verification-result'
+  | 'profile-create'
+  | 'profile-photos'
+  | 'profile-bio'
+  | 'profile-interests'
+  | 'profile-preview'
+  | 'home'
+  | 'admin-verification'
+  | 'admin-moderation';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('+91');
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
@@ -51,29 +75,23 @@ export default function App() {
 
   // Screen handlers
   const handleSplashComplete = useCallback(() => {
-    if (isAuthenticated) {
-      setScreen('home');
+    setScreen('welcome');
+  }, []);
+
+  const handleGetStarted = useCallback(() => {
+    // Skip validation — go directly to verification explanation
+    setScreen('why-verify');
+  }, []);
+
+  const handleVerificationComplete = useCallback((success: boolean) => {
+    if (success) {
+      setScreen('profile-create');
     } else {
       setScreen('welcome');
     }
-  }, [isAuthenticated]);
-
-  const handleGetStarted = useCallback(() => {
-    setScreen('phone');
   }, []);
 
-  const handleOtpSent = useCallback((phone: string, code: string) => {
-    setPhoneNumber(phone);
-    setCountryCode(code);
-    setScreen('otp');
-  }, []);
-
-  const handleOtpSuccess = useCallback(() => {
-    setScreen('home');
-  }, []);
-
-  const handleAdminLogin = useCallback((_adminId: string, _role: AdminRole) => {
-    // In production, store admin session
+  const handleProfileComplete = useCallback(() => {
     setScreen('home');
   }, []);
 
@@ -94,220 +112,105 @@ export default function App() {
           <WelcomeScreen onGetStarted={handleGetStarted} />
         )}
 
-        {screen === 'phone' && (
-          <PhoneScreen
-            onOtpSent={handleOtpSent}
+        {/* Verification Flow */}
+        {screen === 'why-verify' && (
+          <WhyVerifyScreen
+            onContinue={() => setScreen('consent')}
             onBack={() => setScreen('welcome')}
           />
         )}
 
-        {screen === 'otp' && (
-          <OtpScreen
-            phoneNumber={phoneNumber}
-            countryCode={countryCode}
-            onSuccess={handleOtpSuccess}
-            onBack={() => setScreen('phone')}
-            onResend={() => {
-              // Resend OTP logic
+        {screen === 'consent' && (
+          <ConsentScreen
+            onAccept={() => setScreen('id-capture')}
+            onBack={() => setScreen('why-verify')}
+          />
+        )}
+
+        {screen === 'id-capture' && (
+          <IdCaptureScreen
+            onCapture={() => setScreen('selfie')}
+            onBack={() => setScreen('consent')}
+          />
+        )}
+
+        {screen === 'selfie' && (
+          <SelfieScreen
+            onCapture={() => setScreen('processing')}
+            onBack={() => setScreen('id-capture')}
+          />
+        )}
+
+        {screen === 'processing' && (
+          <ProcessingScreen
+            onComplete={(success: boolean) => {
+              if (success) {
+                setScreen('verification-result');
+              }
             }}
           />
         )}
 
-        {screen === 'admin-login' && (
-          <AdminLoginScreen
-            onLogin={handleAdminLogin}
-            onBack={() => setScreen('welcome')}
+        {screen === 'verification-result' && (
+          <VerificationResultScreen
+            onContinue={() => setScreen('profile-create')}
+            onRetry={() => setScreen('why-verify')}
           />
         )}
 
+        {/* Profile Creation Flow */}
+        {screen === 'profile-create' && (
+          <ProfileCreateScreen
+            onComplete={() => setScreen('profile-photos')}
+            onBack={() => setScreen('verification-result')}
+          />
+        )}
+
+        {screen === 'profile-photos' && (
+          <ProfilePhotosScreen
+            onComplete={() => setScreen('profile-bio')}
+            onBack={() => setScreen('profile-create')}
+          />
+        )}
+
+        {screen === 'profile-bio' && (
+          <ProfileBioScreen
+            onComplete={() => setScreen('profile-interests')}
+            onBack={() => setScreen('profile-photos')}
+          />
+        )}
+
+        {screen === 'profile-interests' && (
+          <ProfileInterestsScreen
+            onComplete={() => setScreen('profile-preview')}
+            onBack={() => setScreen('profile-bio')}
+          />
+        )}
+
+        {screen === 'profile-preview' && (
+          <ProfilePreviewScreen
+            onSubmit={handleProfileComplete}
+            onBack={() => setScreen('profile-interests')}
+          />
+        )}
+
+        {/* Home */}
         {screen === 'home' && (
-          <HomeScreen onAdminLogin={() => setScreen('admin-login')} />
+          <HomeScreen
+            onAdminVerification={() => setScreen('admin-verification')}
+            onAdminModeration={() => setScreen('admin-moderation')}
+          />
+        )}
+
+        {/* Admin Screens */}
+        {screen === 'admin-verification' && (
+          <AdminVerificationScreen onBack={() => setScreen('home')} />
+        )}
+
+        {screen === 'admin-moderation' && (
+          <AdminModerationScreen onBack={() => setScreen('home')} />
         )}
       </div>
     </QueryClientProvider>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════
-// HOME SCREEN (Post-Auth)
-// ═══════════════════════════════════════════════════════════════
-
-function HomeScreen({ onAdminLogin }: { onAdminLogin: () => void }) {
-  const user = useAuthStore((s) => s.user);
-  const requiresOnboarding = useAuthStore((s) => s.requiresOnboarding);
-
-  return (
-    <div className="min-h-screen bg-cream">
-      {/* Header */}
-      <header className="px-6 pt-12 pb-4 flex items-center justify-between">
-        <h2 className={typeScale.h3} style={fontSans.style}>
-          {requiresOnboarding ? 'Welcome!' : `Hi${user?.firstName ? `, ${user.firstName}` : ''}`}
-        </h2>
-        <button
-          onClick={onAdminLogin}
-          className="btn btn-ghost !px-3 !py-2 text-sm"
-        >
-          Admin
-        </button>
-      </header>
-
-      {/* Content */}
-      <main className="px-6 py-8">
-        {requiresOnboarding ? (
-          <OnboardingPrompt />
-        ) : (
-          <DiscoverPrompt />
-        )}
-      </main>
-
-      {/* Phase 1 Summary */}
-      <section className="px-6 py-8">
-        <p className="text-label text-muted mb-4">Phase 1 — Complete</p>
-        <div className="flex flex-col gap-3">
-          <ModuleCard
-            title="Identity Module"
-            status="complete"
-            items={[
-              'OTP generation & verification',
-              'JWT + refresh tokens',
-              'Session management',
-              'Device registration',
-              'Domain events',
-              'Zod validation',
-              'Rate limiting',
-            ]}
-          />
-          <ModuleCard
-            title="PWA Setup"
-            status="complete"
-            items={[
-              'Service worker (vite-plugin-pwa)',
-              'Web App Manifest',
-              'Install prompt (Android + iOS)',
-              'Offline detection',
-              'Push notification utilities',
-            ]}
-          />
-          <ModuleCard
-            title="Core Infrastructure"
-            status="complete"
-            items={[
-              'Database client (Prisma mock)',
-              'Redis client (in-memory)',
-              'Rate limiter (Redis-backed)',
-              'Auth middleware',
-              'Admin RBAC',
-            ]}
-          />
-          <ModuleCard
-            title="State Management"
-            status="complete"
-            items={[
-              'Zustand auth store',
-              'Zustand UI store',
-              'TanStack Query hooks',
-            ]}
-          />
-          <ModuleCard
-            title="App Shell Screens"
-            status="complete"
-            items={[
-              'Splash screen',
-              'Welcome screen',
-              'Phone input screen',
-              'OTP verification screen',
-              'Admin login screen',
-            ]}
-          />
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="px-6 py-10 text-center bg-plum-deep text-dark-text mt-10">
-        <p className="text-h3 mb-2" style={fontDisplay.style}>
-          Bae'd
-        </p>
-        <p className="text-lead text-dark-muted">
-          Dating, without the doubt.
-        </p>
-      </footer>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════
-// HELPER COMPONENTS
-// ═══════════════════════════════════════════════════════════════
-
-function OnboardingPrompt() {
-  return (
-    <div className="card text-center">
-      <div className="w-16 h-16 bg-pink-pale rounded-full flex items-center justify-center mx-auto mb-4">
-        <span className="text-3xl">✨</span>
-      </div>
-      <h3 className="text-h3 text-ink mb-2" style={fontSans.style}>
-        Let's set up your profile
-      </h3>
-      <p className="text-body text-muted mb-6">
-        Complete your profile to start matching with verified people.
-      </p>
-      <button className="btn btn-primary w-full">
-        Start Onboarding
-      </button>
-    </div>
-  );
-}
-
-function DiscoverPrompt() {
-  return (
-    <div className="card text-center">
-      <div className="w-16 h-16 bg-pink-pale rounded-full flex items-center justify-center mx-auto mb-4">
-        <span className="text-3xl">💜</span>
-      </div>
-      <h3 className="text-h3 text-ink mb-2" style={fontSans.style}>
-        You're verified!
-      </h3>
-      <p className="text-body text-muted mb-6">
-        Start discovering verified profiles near you.
-      </p>
-      <button className="btn btn-primary w-full">
-        Start Discovering
-      </button>
-    </div>
-  );
-}
-
-function ModuleCard({
-  title,
-  status,
-  items,
-}: {
-  title: string;
-  status: 'complete' | 'in-progress' | 'pending';
-  items: string[];
-}) {
-  const statusColors = {
-    complete: 'bg-verified-green',
-    'in-progress': 'bg-amber',
-    pending: 'bg-muted',
-  };
-
-  return (
-    <div className="card">
-      <div className="flex items-center gap-2 mb-3">
-        <span className={`w-2 h-2 rounded-full ${statusColors[status]}`}></span>
-        <h4 className="text-h3 text-ink" style={fontSans.style}>
-          {title}
-        </h4>
-      </div>
-      <ul className="space-y-1">
-        {items.map((item) => (
-          <li key={item} className="flex items-start gap-2 text-body text-muted text-sm">
-            <span className="text-verified-green mt-0.5">✓</span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
