@@ -1,3 +1,5 @@
+import { Avatar } from '@/components/shared/Avatar';
+
 interface ProfileScreenProps {
   onLogout: () => void;
 }
@@ -9,14 +11,7 @@ export function ProfileScreen({ onLogout }: ProfileScreenProps) {
         {/* Profile Header */}
         <div className="text-center py-8">
           {/* Large Avatar */}
-          <div className="avatar avatar-xl bg-gradient-to-br from-[#E8B4B8] to-[#D4A5A5] mx-auto mb-4 relative">
-            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center border-2 border-[var(--color-bg)]">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2.5">
-                <path d="M9 12l2 2 4-4" />
-                <circle cx="12" cy="12" r="10" />
-              </svg>
-            </div>
-          </div>
+          <Avatar size="xl" variant="gradient" verified={true} className="mx-auto mb-4" />
 
           {/* Name, Age, Verified */}
           <div className="flex items-center justify-center gap-2 mb-2">

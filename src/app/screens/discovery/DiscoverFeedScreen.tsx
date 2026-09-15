@@ -3,6 +3,8 @@ import { getDiscoveryFeed, resetSeenProfiles } from '@/modules/discovery/service
 import { likeProfile, passProfile } from '@/modules/matching/services/matching.service';
 import type { CandidateProfile } from '@/modules/discovery/types/discovery.types';
 import type { Match } from '@/modules/matching/types/matching.types';
+import { ProfileCard } from '@/components/shared/ProfileCard';
+import { EmptyState } from '@/components/shared/EmptyState';
 
 interface DiscoverFeedScreenProps {
   onViewProfile: (profileId: string) => void;
@@ -108,7 +110,7 @@ export function DiscoverFeedScreen({
             {/* Profile card - 80% of screen */}
             <div className="flex-1 flex items-center justify-center mb-4">
               <div
-                className={`relative w-full aspect-[3/4] max-h-[calc(100vh-280px)] rounded-[24px] overflow-hidden shadow-[var(--shadow-lg)] transition-transform duration-300 ease-out ${
+                className={`relative w-full aspect-[3/4] max-h-[calc(100vh-280px)] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-lg)] transition-transform duration-300 ease-out ${
                   swipeDirection === 'left'
                     ? '-translate-x-[150%] -rotate-[20deg] opacity-0'
                     : swipeDirection === 'right'
@@ -120,7 +122,7 @@ export function DiscoverFeedScreen({
                 }}
               >
                 {/* Beautiful gradient placeholder (not grey person icon) */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#E8B4B8] via-[#D4A5A5] to-[#C99A9D]"></div>
+                <div className="absolute inset-0 avatar-gradient-rich"></div>
                 
                 {/* Subtle texture overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
@@ -141,27 +143,27 @@ export function DiscoverFeedScreen({
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   {/* Name, age, verified */}
                   <div className="flex items-center gap-2 mb-2">
-                    <h2 className="text-[32px] font-semibold">{currentProfile.displayName}</h2>
-                    <span className="text-[32px] font-light">{currentProfile.age}</span>
+                    <h2 className="text-profile-name">{currentProfile.displayName}</h2>
+                    <span className="text-profile-age">{currentProfile.age}</span>
                     {currentProfile.isVerified && (
-                      <div className="flex items-center gap-1 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
+                      <div className="profile-card-badge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                           <path d="M9 12l2 2 4-4" />
                           <circle cx="12" cy="12" r="10" />
                         </svg>
-                        <span className="text-xs font-medium">Verified</span>
+                        <span className="profile-card-badge-text">Verified</span>
                       </div>
                     )}
                   </div>
 
                   {/* Occupation and location */}
                   <div className="mb-3">
-                    <p className="text-[15px] text-white/90 mb-1">{currentProfile.occupation}</p>
-                    <p className="text-[13px] text-white/70">{currentProfile.city} · {currentProfile.distance} km away</p>
+                    <p className="text-profile-detail mb-1">{currentProfile.occupation}</p>
+                    <p className="text-profile-location">{currentProfile.city} · {currentProfile.distance} km away</p>
                   </div>
 
                   {/* Short bio */}
-                  <p className="text-[14px] text-white/80 mb-3 line-clamp-2">
+                  <p className="text-profile-bio mb-3 line-clamp-2">
                     {currentProfile.bio || "Designing things by day. Looking for someone to explore the city with."}
                   </p>
 
@@ -170,7 +172,7 @@ export function DiscoverFeedScreen({
                     {currentProfile.interests.slice(0, 3).map((interest) => (
                       <span
                         key={interest}
-                        className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium"
+                        className="profile-card-interest"
                       >
                         {interest}
                       </span>

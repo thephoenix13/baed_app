@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getUserMatches } from '@/modules/matching/services/matching.service';
 import type { Match } from '@/modules/matching/types/matching.types';
+import { Avatar } from '@/components/shared/Avatar';
+import { EmptyState } from '@/components/shared/EmptyState';
 
 interface MessagesScreenProps {
   userId: string;
@@ -62,17 +64,15 @@ export function MessagesScreen({ userId, onOpenConversation }: MessagesScreenPro
       <div className="page-content">
         {conversations.length === 0 ? (
           /* Empty state */
-          <div className="empty-state" style={{ minHeight: '60vh' }}>
-            <div className="empty-state-icon">
+          <EmptyState
+            icon={
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
-            </div>
-            <p className="text-section-title mb-2">No conversations yet</p>
-            <p className="text-body-secondary">
-              When you match with someone, your conversations will appear here.
-            </p>
-          </div>
+            }
+            title="No conversations yet"
+            description="When you match with someone, your conversations will appear here."
+          />
         ) : (
           /* Conversation list */
           <div className="space-y-1">
@@ -83,15 +83,7 @@ export function MessagesScreen({ userId, onOpenConversation }: MessagesScreenPro
                 className="w-full flex items-center gap-4 py-4 hover:bg-[var(--color-bg-chip)] transition-colors rounded-[var(--radius-md)] px-2 -mx-2"
               >
                 {/* Profile photo */}
-                <div className="avatar avatar-md bg-gradient-to-br from-[#E8B4B8] to-[#D4A5A5] relative flex-shrink-0">
-                  {conv.isVerified && (
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center border-2 border-[var(--color-bg)]">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="3">
-                        <path d="M9 12l2 2 4-4" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
+                <Avatar size="md" variant="gradient" verified={conv.isVerified} />
 
                 {/* Content */}
                 <div className="flex-1 min-w-0 text-left">

@@ -64,6 +64,10 @@
   --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
 
+  /* ─── GRADIENTS (for avatars/profiles) ─── */
+  --gradient-avatar: linear-gradient(135deg, #E8B4B8 0%, #D4A5A5 100%);
+  --gradient-avatar-rich: linear-gradient(135deg, #F5D5D8 0%, #E8B4B8 50%, #C99A9D 100%);
+
   /* ─── ANIMATION ─── */
   --animate-fade-in: fade-in 200ms ease;
   --animate-slide-up: slide-up 250ms ease;
@@ -186,6 +190,65 @@
     font-weight: 500;
     line-height: 1;
     color: var(--color-text);
+  }
+
+  /* Profile card text (for overlay on photos) */
+  .text-profile-name {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: white;
+  }
+
+  .text-profile-age {
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: white;
+  }
+
+  .text-profile-detail {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .text-profile-location {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .text-profile-bio {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Chat message text */
+  .text-message {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .text-message-time {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--color-text-tertiary);
+  }
+
+  .text-message-time-inverse {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.6);
   }
 }
 
@@ -527,5 +590,194 @@
     justify-content: center;
     margin-bottom: var(--spacing-5);
     color: var(--color-text-tertiary);
+  }
+
+  /* ─── LOADING STATE ─── */
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-10) var(--spacing-6);
+    text-align: center;
+  }
+
+  .loading-spinner-lg {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: var(--spacing-5);
+  }
+
+  /* ─── ERROR STATE ─── */
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-10) var(--spacing-6);
+    text-align: center;
+  }
+
+  .error-state-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-error-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-5);
+    color: var(--color-error);
+  }
+
+  /* ─── BOTTOM SHEET ─── */
+  .bottom-sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: var(--color-bg-overlay);
+    z-index: 50;
+    animation: var(--animate-fade-in);
+  }
+
+  .bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-bg-card);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding: var(--spacing-6);
+    padding-bottom: calc(var(--spacing-6) + env(safe-area-inset-bottom, 0px));
+    z-index: 51;
+    animation: var(--animate-slide-up);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .bottom-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background-color: var(--color-border);
+    border-radius: var(--radius-full);
+    margin: 0 auto var(--spacing-5);
+  }
+
+  /* ─── PROGRESS INDICATOR ─── */
+  .progress-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+
+  .progress-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-border);
+  }
+
+  .progress-dot-active {
+    background-color: var(--color-accent);
+  }
+
+  /* ─── SELECTION STATE ─── */
+  .selection-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    height: 44px;
+    padding: 0 var(--spacing-4);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    background-color: var(--color-bg-card);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all 150ms ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .selection-chip:active {
+    transform: scale(0.96);
+  }
+
+  .selection-chip-selected {
+    background-color: var(--color-accent-light);
+    color: var(--color-text);
+    border-color: var(--color-accent);
+  }
+
+  /* ─── AVATAR WITH GRADIENT ─── */
+  .avatar-gradient {
+    background: var(--gradient-avatar);
+  }
+
+  .avatar-gradient-rich {
+    background: var(--gradient-avatar-rich);
+  }
+
+  /* ─── PROFILE CARD (Reusable) ─── */
+  .profile-card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-6);
+    padding-bottom: var(--spacing-5);
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    color: white;
+  }
+
+  .profile-card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-full);
+  }
+
+  .profile-card-badge-text {
+    font-size: 11px;
+    font-weight: 500;
+    color: white;
+  }
+
+  .profile-card-interest {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+  }
+
+  /* ─── CHAT BUBBLE ─── */
+  .chat-bubble {
+    max-width: 75%;
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--radius-lg);
+  }
+
+  .chat-bubble-sent {
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
+    border-bottom-right-radius: var(--radius-sm);
+  }
+
+  .chat-bubble-received {
+    background-color: var(--color-bg-chip);
+    color: var(--color-text);
+    border-bottom-left-radius: var(--radius-sm);
   }
 }

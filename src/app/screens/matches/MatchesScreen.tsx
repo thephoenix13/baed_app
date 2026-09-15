@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getUserMatches, resetMatchingData } from '@/modules/matching/services/matching.service';
 import type { Match } from '@/modules/matching/types/matching.types';
+import { Avatar } from '@/components/shared/Avatar';
+import { EmptyState } from '@/components/shared/EmptyState';
 
 interface MatchesScreenProps {
   userId: string;
@@ -67,15 +69,7 @@ export function MatchesScreen({ userId, onOpenChat, newMatch, onDismissMatch }: 
                         onClick={() => onOpenChat(match.id)}
                         className="flex-shrink-0 text-center"
                       >
-                        <div className="avatar avatar-lg bg-gradient-to-br from-[#E8B4B8] to-[#D4A5A5] mb-2 relative">
-                          {partner.isVerified && (
-                            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center border-2 border-[var(--color-bg)]">
-                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="3">
-                                <path d="M9 12l2 2 4-4" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
+                        <Avatar size="lg" variant="gradient" verified={partner.isVerified} className="mb-2" />
                         <p className="text-caption font-medium">{partner.displayName}</p>
                         <p className="text-small">{partner.age}</p>
                       </button>
@@ -97,15 +91,7 @@ export function MatchesScreen({ userId, onOpenChat, newMatch, onDismissMatch }: 
                       onClick={() => onOpenChat(match.id)}
                       className={`list-row w-full px-5 ${i < matches.length - 1 ? 'border-b border-[var(--color-border)]' : ''}`}
                     >
-                      <div className="avatar avatar-md bg-gradient-to-br from-[#E8B4B8] to-[#D4A5A5] relative">
-                        {partner.isVerified && (
-                          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center border-2 border-[var(--color-bg)]">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="3">
-                              <path d="M9 12l2 2 4-4" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
+                      <Avatar size="md" variant="gradient" verified={partner.isVerified} />
                       <div className="flex-1 text-left">
                         <div className="flex items-center gap-1.5">
                           <p className="text-body font-medium">{partner.displayName}</p>
@@ -129,25 +115,27 @@ export function MatchesScreen({ userId, onOpenChat, newMatch, onDismissMatch }: 
             </div>
           </>
         ) : (
-          <div className="empty-state" style={{ minHeight: '60vh' }}>
-            <div className="empty-state-icon">
+          <EmptyState
+            icon={
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M8 14s1.5 2 4 2 4-2 4-2" />
                 <line x1="9" y1="9" x2="9.01" y2="9" />
                 <line x1="15" y1="9" x2="15.01" y2="9" />
               </svg>
-            </div>
-            <p className="text-section-title mb-2">Your matches will appear here</p>
-            <p className="text-body-secondary mb-8">When someone likes you back, you'll find them here.</p>
-            <button 
-              onClick={() => window.location.hash = '#/discover'}
-              className="btn btn-primary"
-              style={{ width: 'auto', padding: '0 32px' }}
-            >
-              Discover people
-            </button>
-          </div>
+            }
+            title="Your matches will appear here"
+            description="When someone likes you back, you'll find them here."
+            action={
+              <button 
+                onClick={() => window.location.hash = '#/discover'}
+                className="btn btn-primary"
+                style={{ width: 'auto', padding: '0 32px' }}
+              >
+                Discover people
+              </button>
+            }
+          />
         )}
       </div>
     </div>

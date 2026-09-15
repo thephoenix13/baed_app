@@ -92,14 +92,10 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
               return (
                 <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                   <div
-                    className={`max-w-[75%] px-4 py-2.5 ${
-                      isMe
-                        ? 'bg-[var(--color-accent)] text-white rounded-[18px] rounded-br-[4px]'
-                        : 'bg-[var(--color-bg-chip)] text-[var(--color-text)] rounded-[18px] rounded-bl-[4px]'
-                    }`}
+                    className={`chat-bubble ${isMe ? 'chat-bubble-sent' : 'chat-bubble-received'}`}
                   >
-                    <p className="text-[15px]">{msg.text}</p>
-                    <p className={`text-[11px] mt-1 ${isMe ? 'text-white/60' : 'text-[var(--color-text-tertiary)]'}`}>
+                    <p className="text-message">{msg.text}</p>
+                    <p className={isMe ? 'text-message-time-inverse' : 'text-message-time'}>
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
