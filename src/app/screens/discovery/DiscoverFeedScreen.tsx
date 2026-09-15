@@ -43,6 +43,7 @@ export function DiscoverFeedScreen({
       if (result.isMatch && result.match) onMatch(result.match);
       setCurrentIndex((prev) => prev + 1);
       setSwipeDirection(null);
+      setDragOffset(0);
     }, 250);
   };
 
@@ -54,6 +55,7 @@ export function DiscoverFeedScreen({
       passProfile(userId, profile.userId);
       setCurrentIndex((prev) => prev + 1);
       setSwipeDirection(null);
+      setDragOffset(0);
     }, 250);
   };
 
@@ -107,10 +109,10 @@ export function DiscoverFeedScreen({
       <div className="flex-1 flex flex-col px-4 pb-4">
         {hasMore && currentProfile ? (
           <>
-            {/* Profile card - 80% of screen */}
+            {/* Profile card */}
             <div className="flex-1 flex items-center justify-center mb-4">
               <div
-                className={`relative w-full aspect-[3/4] max-h-[calc(100vh-280px)] rounded-[var(--radius-xl)] overflow-hidden shadow-[var(--shadow-lg)] transition-transform duration-300 ease-out ${
+                className={`relative w-full aspect-[3/4] max-h-[calc(100vh-280px)] transition-transform duration-300 ease-out ${
                   swipeDirection === 'left'
                     ? '-translate-x-[150%] -rotate-[20deg] opacity-0'
                     : swipeDirection === 'right'
@@ -121,68 +123,33 @@ export function DiscoverFeedScreen({
                   transform: swipeDirection ? undefined : `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
                 }}
               >
-                {/* Beautiful gradient placeholder (not grey person icon) */}
-                <div className="absolute inset-0 avatar-gradient-rich"></div>
-                
-                {/* Subtle texture overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+                <ProfileCard
+                  name={currentProfile.displayName}
+                  age={currentProfile.age}
+                  city={currentProfile.city || ''}
+                  distance={currentProfile.distance}
+                  occupation={currentProfile.occupation || undefined}
+                  bio={currentProfile.bio || undefined}
+                  interests={currentProfile.interests}
+                  verified={currentProfile.isVerified}
+                  variant="gradient-rich"
+                />
 
                 {/* LIKE/PASS feedback */}
                 {dragOffset > 50 && (
-                  <div className="absolute top-8 left-8 px-4 py-2 bg-[var(--color-success)] text-white rounded-lg font-semibold text-lg rotate-[-20deg] border-2 border-white">
+                  <div className="absolute top-8 left-8 px-4 py-2 bg-[var(--color-success)] text-white rounded-[var(--radius-md)] font-semibold text-lg rotate-[-20deg] border-2 border-white">
                     LIKE
                   </div>
                 )}
                 {dragOffset < -50 && (
-                  <div className="absolute top-8 right-8 px-4 py-2 bg-[var(--color-error)] text-white rounded-lg font-semibold text-lg rotate-[20deg] border-2 border-white">
+                  <div className="absolute top-8 right-8 px-4 py-2 bg-[var(--color-error)] text-white rounded-[var(--radius-md)] font-semibold text-lg rotate-[20deg] border-2 border-white">
                     PASS
                   </div>
                 )}
-
-                {/* Profile info overlay at bottom */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  {/* Name, age, verified */}
-                  <div className="flex items-center gap-2 mb-2">
-                    <h2 className="text-profile-name">{currentProfile.displayName}</h2>
-                    <span className="text-profile-age">{currentProfile.age}</span>
-                    {currentProfile.isVerified && (
-                      <div className="profile-card-badge">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M9 12l2 2 4-4" />
-                          <circle cx="12" cy="12" r="10" />
-                        </svg>
-                        <span className="profile-card-badge-text">Verified</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Occupation and location */}
-                  <div className="mb-3">
-                    <p className="text-profile-detail mb-1">{currentProfile.occupation}</p>
-                    <p className="text-profile-location">{currentProfile.city} · {currentProfile.distance} km away</p>
-                  </div>
-
-                  {/* Short bio */}
-                  <p className="text-profile-bio mb-3 line-clamp-2">
-                    {currentProfile.bio || "Designing things by day. Looking for someone to explore the city with."}
-                  </p>
-
-                  {/* Interest tags */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {currentProfile.interests.slice(0, 3).map((interest) => (
-                      <span
-                        key={interest}
-                        className="profile-card-interest"
-                      >
-                        {interest}
-                      </span>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
 
-            {/* Action buttons - floating */}
+            {/* Action buttons */}
             <div className="flex items-center justify-center gap-6 py-4">
               {/* Pass button */}
               <button
@@ -209,22 +176,23 @@ export function DiscoverFeedScreen({
             </div>
           </>
         ) : (
-          /* Empty state */
-          <div className="flex-1 flex flex-col items-center justify-center px-6">
-            <div className="w-16 h-16 rounded-full bg-[var(--color-bg-chip)] flex items-center justify-center mb-6">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" strokeWidth="1.5">
+          <EmptyState
+            icon={
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M8 14s1.5 2 4 2 4-2 4-2" />
                 <line x1="9" y1="9" x2="9.01" y2="9" />
                 <line x1="15" y1="9" x2="15.01" y2="9" />
               </svg>
-            </div>
-            <h2 className="text-section-title mb-2 text-center">No more profiles</h2>
-            <p className="text-body-secondary mb-8 text-center">Check back later or adjust your filters</p>
-            <button onClick={handleReset} className="btn btn-primary" style={{ width: 'auto', padding: '0 32px' }}>
-              Start Over
-            </button>
-          </div>
+            }
+            title="No more profiles"
+            description="Check back later or adjust your filters"
+            action={
+              <button onClick={handleReset} className="btn btn-primary" style={{ width: 'auto', padding: '0 32px' }}>
+                Start Over
+              </button>
+            }
+          />
         )}
       </div>
     </div>

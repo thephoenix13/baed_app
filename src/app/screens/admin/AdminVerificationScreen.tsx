@@ -1,5 +1,3 @@
-import { fontDisplay } from '@/lib/fonts';
-
 interface AdminVerificationScreenProps {
   onBack: () => void;
 }
@@ -44,22 +42,22 @@ const MOCK_VERIFICATIONS = [
 ];
 
 const statusColors: Record<string, string> = {
-  PROCESSING: 'bg-amber text-white',
-  MANUAL_REVIEW: 'bg-pink text-white',
-  VERIFIED: 'bg-verified-green text-white',
-  FAILED: 'bg-error text-white',
+  PROCESSING: 'bg-[var(--color-warning)] text-white',
+  MANUAL_REVIEW: 'bg-[var(--color-accent)] text-white',
+  VERIFIED: 'bg-[var(--color-success)] text-white',
+  FAILED: 'bg-[var(--color-error)] text-white',
 };
 
 export function AdminVerificationScreen({ onBack }: AdminVerificationScreenProps) {
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-[var(--color-bg)]">
       <div className="px-6 pt-12 pb-4 flex items-center gap-3">
-        <button onClick={onBack} className="btn btn-ghost !px-3 !py-2" aria-label="Go back">
+        <button onClick={onBack} className="btn-icon" aria-label="Go back">
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
-        <h1 className="text-h3 text-plum" style={fontDisplay.style}>
+        <h1 className="text-screen-title">
           Verification Queue
         </h1>
       </div>
@@ -68,16 +66,16 @@ export function AdminVerificationScreen({ onBack }: AdminVerificationScreenProps
       <div className="px-6 mb-6">
         <div className="grid grid-cols-3 gap-3">
           <div className="card text-center !p-3">
-            <p className="text-h3 text-plum">24</p>
-            <p className="text-label text-muted">Pending</p>
+            <p className="text-section-title text-[var(--color-text)]">24</p>
+            <p className="text-small">Pending</p>
           </div>
           <div className="card text-center !p-3">
-            <p className="text-h3 text-amber">8</p>
-            <p className="text-label text-muted">Review</p>
+            <p className="text-section-title text-[var(--color-warning)]">8</p>
+            <p className="text-small">Review</p>
           </div>
           <div className="card text-center !p-3">
-            <p className="text-h3 text-verified-green">142</p>
-            <p className="text-label text-muted">Verified</p>
+            <p className="text-section-title text-[var(--color-success)]">142</p>
+            <p className="text-small">Verified</p>
           </div>
         </div>
       </div>
@@ -88,24 +86,24 @@ export function AdminVerificationScreen({ onBack }: AdminVerificationScreenProps
           <div key={v.id} className="card">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="text-body font-semibold text-ink">{v.name}, {v.age}</h3>
-                <p className="text-body text-muted text-sm">{v.city} · {v.documentType}</p>
+                <h3 className="text-body font-semibold">{v.name}, {v.age}</h3>
+                <p className="text-caption">{v.city} · {v.documentType}</p>
               </div>
-              <span className={`pill !text-xs ${statusColors[v.status]}`}>
+              <span className={`chip !text-xs !h-6 ${statusColors[v.status]}`}>
                 {v.status.replace('_', ' ')}
               </span>
             </div>
 
             <div className="flex gap-2">
-              <button className="btn btn-primary !py-2 !px-4 flex-1 text-sm">
+              <button className="btn btn-primary !h-10 flex-1 text-sm">
                 Approve
               </button>
-              <button className="btn btn-ghost !py-2 !px-4 flex-1 text-sm !border-error !text-error">
+              <button className="btn btn-ghost !h-10 flex-1 text-sm !text-[var(--color-error)]">
                 Reject
               </button>
             </div>
 
-            <p className="text-body text-muted text-xs mt-2">
+            <p className="text-small mt-2">
               Submitted {v.submittedAt}
             </p>
           </div>
