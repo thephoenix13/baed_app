@@ -1,9 +1,3 @@
-/**
- * Matches Screen
- *
- * List of all matches with match animation.
- */
-
 import { useState, useEffect } from 'react';
 import { fontDisplay } from '@/lib/fonts';
 import { getUserMatches, resetMatchingData } from '@/modules/matching/services/matching.service';
@@ -43,7 +37,7 @@ export function MatchesScreen({
   const handleDismissMatch = () => {
     setShowMatchAnimation(false);
     onDismissMatch?.();
-    loadMatches(); // Reload to show updated list
+    loadMatches();
   };
 
   const handleReset = () => {
@@ -56,21 +50,20 @@ export function MatchesScreen({
   };
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-cream pb-20">
       {/* Header */}
-      <header className="px-6 pt-12 pb-4">
-        <h1 className="text-h3 text-plum" style={fontDisplay.style}>
-          Matches
-        </h1>
+      <header className="px-4 pt-12 pb-4">
+        <h1 className="text-h2 text-plum font-display">Matches</h1>
+        <p className="text-small text-stone mt-1">{matches.length} connections</p>
       </header>
 
-      {/* Match Animation Overlay — Light Theme */}
+      {/* Match Animation Overlay */}
       {showMatchAnimation && newMatch && (
-        <div className="fixed inset-0 bg-cream z-50 flex items-center justify-center px-6">
+        <div className="fixed inset-0 bg-cream z-50 flex items-center justify-center px-4">
           <div className="text-center">
-            {/* Verified Badge — Hero Moment */}
-            <div className="mb-8">
-              <div className="verified-badge verified-badge-large mx-auto mb-6">
+            {/* Verified Badge */}
+            <div className="mb-6">
+              <div className="verified-badge verified-badge-large mx-auto mb-4">
                 <svg className="verified-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M9 12l2 2 4-4" />
                   <circle cx="12" cy="12" r="10" />
@@ -79,8 +72,8 @@ export function MatchesScreen({
               </div>
             </div>
 
-            <div className="mb-8">
-              <h2 className="text-hero text-plum mb-4 font-display">
+            <div className="mb-6">
+              <h2 className="text-hero text-plum mb-3 font-display">
                 It's a Match
               </h2>
               <p className="text-lead text-stone">
@@ -88,28 +81,28 @@ export function MatchesScreen({
               </p>
             </div>
 
-            {/* Profile Photos — Minimal */}
-            <div className="flex items-center justify-center gap-6 mb-12">
-              <div className="w-24 h-24 bg-sand rounded-full flex items-center justify-center border-2 border-line">
-                <svg className="w-12 h-12 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            {/* Profile Photos */}
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="w-20 h-20 bg-sand rounded-full flex items-center justify-center border-2 border-line">
+                <svg className="w-10 h-10 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
-              <div className="w-12 h-12 bg-rose rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <div className="w-10 h-10 bg-rose rounded-full flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
               </div>
-              <div className="w-24 h-24 bg-sand rounded-full flex items-center justify-center border-2 border-line">
-                <svg className="w-12 h-12 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <div className="w-20 h-20 bg-sand rounded-full flex items-center justify-center border-2 border-line">
+                <svg className="w-10 h-10 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
             </div>
 
-            <button onClick={handleDismissMatch} className="btn btn-primary w-full mb-3">
+            <button onClick={handleDismissMatch} className="btn btn-primary w-full mb-2">
               Send a Message
             </button>
             <button onClick={handleDismissMatch} className="btn btn-ghost w-full">
@@ -120,13 +113,13 @@ export function MatchesScreen({
       )}
 
       {/* Content */}
-      <div className="px-6 pb-8">
+      <div className="px-4">
         {matches.length > 0 ? (
           <>
-            {/* New Matches */}
-            <div className="mb-6">
-              <h2 className="text-label text-stone mb-3">New Matches</h2>
-              <div className="flex gap-3 overflow-x-auto pb-2">
+            {/* New Matches - Horizontal Scroll */}
+            <div className="mb-4">
+              <h3 className="text-label text-stone mb-3">New Matches</h3>
+              <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4">
                 {matches.slice(0, 5).map((match) => {
                   const partner = getPartner(match);
                   return (
@@ -135,66 +128,59 @@ export function MatchesScreen({
                       onClick={() => onOpenChat(match.id)}
                       className="flex-shrink-0 text-center"
                     >
-                      <div className="w-20 h-20 bg-rose-pale rounded-full flex items-center justify-center mb-2 border-2 border-rose">
-                        <svg className="w-10 h-10 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <div className="w-16 h-16 bg-rose-pale rounded-full flex items-center justify-center mb-2 border-2 border-rose">
+                        <svg className="w-8 h-8 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                           <circle cx="12" cy="7" r="4" />
                         </svg>
                       </div>
-                      <p className="text-body text-ink text-sm font-semibold">{partner.displayName}</p>
-                      <p className="text-body text-stone text-xs">{partner.age}</p>
+                      <p className="text-small text-ink font-semibold">{partner.displayName}</p>
+                      <p className="text-tiny text-stone">{partner.age}</p>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* All Matches */}
+            {/* All Matches - Grid Layout */}
             <div>
-              <h2 className="text-label text-stone mb-3">All Matches ({matches.length})</h2>
-              <div className="space-y-2">
+              <h3 className="text-label text-stone mb-3">All Matches</h3>
+              <div className="grid grid-cols-2 gap-3">
                 {matches.map((match) => {
                   const partner = getPartner(match);
                   return (
                     <button
                       key={match.id}
                       onClick={() => onOpenChat(match.id)}
-                      className="card w-full text-left hover:shadow-elevated transition-shadow"
+                      className="card text-left hover:shadow-medium transition-shadow"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-14 h-14 bg-rose-pale rounded-full flex items-center justify-center flex-shrink-0">
-                          <svg className="w-7 h-7 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                          </svg>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-body font-semibold text-ink">{partner.displayName}</h3>
-                            {partner.isVerified && (
-                              <svg className="w-4 h-4 text-verified-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M9 12l2 2 4-4" />
-                                <circle cx="12" cy="12" r="10" />
-                              </svg>
-                            )}
-                          </div>
-                          <p className="text-body text-stone text-sm">
-                            {partner.age} · {partner.city}
-                          </p>
-                        </div>
-                        <svg className="w-5 h-5 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="9 18 15 12 9 6" />
+                      <div className="w-full aspect-square bg-sand rounded-lg flex items-center justify-center mb-2">
+                        <svg className="w-12 h-12 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
                         </svg>
                       </div>
+                      <div className="flex items-center gap-1 mb-1">
+                        <h4 className="text-body font-semibold text-ink">{partner.displayName}</h4>
+                        {partner.isVerified && (
+                          <svg className="w-3 h-3 text-verified" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M9 12l2 2 4-4" />
+                            <circle cx="12" cy="12" r="10" />
+                          </svg>
+                        )}
+                      </div>
+                      <p className="text-tiny text-stone">
+                        {partner.age} · {partner.city}
+                      </p>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Reset Button (for demo) */}
-            <div className="mt-8 text-center">
-              <button onClick={handleReset} className="btn btn-ghost text-sm">
+            {/* Reset Button */}
+            <div className="mt-6 text-center">
+              <button onClick={handleReset} className="btn btn-ghost text-small">
                 Reset Matches (Demo)
               </button>
             </div>
@@ -206,7 +192,7 @@ export function MatchesScreen({
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </div>
-            <h2 className="text-h3 text-ink mb-2" style={fontDisplay.style}>
+            <h2 className="text-h3 text-ink mb-2 font-display">
               No matches yet
             </h2>
             <p className="text-body text-stone">

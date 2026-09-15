@@ -1,11 +1,4 @@
-/**
- * Chat Screen
- *
- * Simple chat interface for a match.
- */
-
 import { useState } from 'react';
-import { fontDisplay } from '@/lib/fonts';
 import { getMatch, getMatchPartner } from '@/modules/matching/services/matching.service';
 import type { Match } from '@/modules/matching/types/matching.types';
 
@@ -30,7 +23,7 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
   if (!match) {
     return (
       <div className="min-h-screen bg-cream flex items-center justify-center">
-        <p className="text-body text-muted">Match not found</p>
+        <p className="text-body text-stone">Match not found</p>
       </div>
     );
   }
@@ -71,9 +64,9 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
   return (
     <div className="min-h-screen bg-cream flex flex-col">
       {/* Header */}
-      <header className="px-6 pt-12 pb-4 flex items-center gap-3 border-b border-line">
-        <button onClick={onBack} className="btn btn-ghost !px-3 !py-2" aria-label="Go back">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <header className="px-4 pt-12 pb-3 flex items-center gap-3 border-b border-line bg-white">
+        <button onClick={onBack} className="touch-target" aria-label="Go back">
+          <svg className="w-5 h-5 text-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
@@ -85,17 +78,17 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
         </div>
         <div className="flex-1">
           <h1 className="text-body font-semibold text-ink">{partner.displayName}</h1>
-          <p className="text-body text-muted text-xs">
+          <p className="text-tiny text-stone">
             {partner.age} · {partner.city}
           </p>
         </div>
       </header>
 
       {/* Messages */}
-      <div className="flex-1 px-6 py-4 overflow-y-auto">
+      <div className="flex-1 px-4 py-4 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-rose-pale rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-rose-pale rounded-full flex items-center justify-center mx-auto mb-3">
               <svg className="w-8 h-8 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
@@ -114,14 +107,14 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
                   className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[70%] px-4 py-2 rounded-2xl ${
+                    className={`max-w-[75%] px-3 py-2 rounded-2xl ${
                       isMe
                         ? 'bg-rose text-white rounded-br-sm'
                         : 'bg-white text-ink rounded-bl-sm border border-line'
                     }`}
                   >
                     <p className="text-body">{msg.text}</p>
-                    <p className={`text-xs mt-1 ${isMe ? 'text-white/60' : 'text-stone'}`}>
+                    <p className={`text-tiny mt-1 ${isMe ? 'text-white/60' : 'text-stone'}`}>
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -133,7 +126,7 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
       </div>
 
       {/* Input */}
-      <div className="px-6 pb-8 pt-4 border-t border-line">
+      <div className="px-4 pb-4 pt-3 border-t border-line bg-white">
         <div className="flex gap-2">
           <input
             type="text"
@@ -146,7 +139,7 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
           <button
             onClick={handleSend}
             disabled={!newMessage.trim()}
-            className={`btn btn-primary !px-4 ${!newMessage.trim() ? 'btn-disabled' : ''}`}
+            className={`btn btn-primary !px-3 ${!newMessage.trim() ? 'btn-disabled' : ''}`}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="22" y1="2" x2="11" y2="13" />

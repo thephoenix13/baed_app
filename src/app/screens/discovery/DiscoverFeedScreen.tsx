@@ -1,9 +1,3 @@
-/**
- * Discover Feed Screen
- *
- * Swipeable card interface for browsing profiles.
- */
-
 import { useState, useEffect } from 'react';
 import { fontDisplay } from '@/lib/fonts';
 import { getDiscoveryFeed, resetSeenProfiles } from '@/modules/discovery/services/discovery.service';
@@ -76,18 +70,16 @@ export function DiscoverFeedScreen({
   const hasMore = currentIndex < profiles.length;
 
   return (
-    <div className="min-h-screen bg-cream flex flex-col">
+    <div className="min-h-screen bg-cream pb-20">
       {/* Header */}
-      <header className="px-6 pt-12 pb-4 flex items-center justify-between">
-        <h1 className="text-h3 text-plum" style={fontDisplay.style}>
-          Discover
-        </h1>
+      <header className="px-4 pt-12 pb-4 flex items-center justify-between">
+        <h1 className="text-h2 text-plum font-display">Discover</h1>
         <button
           onClick={onOpenFilters}
-          className="btn btn-ghost !px-3 !py-2"
+          className="touch-target"
           aria-label="Open filters"
         >
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg className="w-6 h-6 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="4" y1="21" x2="4" y2="14" />
             <line x1="4" y1="10" x2="4" y2="3" />
             <line x1="12" y1="21" x2="12" y2="12" />
@@ -101,8 +93,8 @@ export function DiscoverFeedScreen({
         </button>
       </header>
 
-      {/* Card Stack — Full-bleed, Editorial */}
-      <div className="flex-1 px-4 py-4 flex items-center justify-center">
+      {/* Card Stack */}
+      <div className="px-4 pb-4">
         {hasMore && currentProfile ? (
           <div
             className={`profile-card transition-transform duration-300 ${
@@ -113,7 +105,7 @@ export function DiscoverFeedScreen({
                 : ''
             }`}
           >
-            {/* Photo — Full-bleed */}
+            {/* Photo */}
             <div className="absolute inset-0 bg-gradient-to-b from-sand to-ivory flex items-center justify-center">
               <svg className="w-32 h-32 text-stone" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -121,9 +113,9 @@ export function DiscoverFeedScreen({
               </svg>
             </div>
 
-            {/* Profile Info Overlay — Editorial */}
+            {/* Profile Info Overlay */}
             <div className="profile-card-overlay">
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2 mb-2">
                 <h2 className="text-h2 font-display">
                   {currentProfile.displayName}, {currentProfile.age}
                 </h2>
@@ -138,35 +130,35 @@ export function DiscoverFeedScreen({
                 )}
               </div>
 
-              <p className="text-body text-white/90 mb-2">
+              <p className="text-body text-white/90 mb-1">
                 {currentProfile.occupation} · {currentProfile.city}
               </p>
 
-              <p className="text-small text-white/80 mb-4 line-clamp-2">
+              <p className="text-small text-white/80 mb-3 line-clamp-2">
                 {currentProfile.bio}
               </p>
 
-              {/* Interests — Subtle */}
-              <div className="flex flex-wrap gap-1.5">
-                {currentProfile.interests.slice(0, 4).map((interest) => (
-                  <span key={interest} className="text-small text-white/70">
+              {/* Interests */}
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {currentProfile.interests.slice(0, 3).map((interest) => (
+                  <span key={interest} className="text-tiny text-white/70 bg-white/20 px-2 py-1 rounded-full">
                     {interest}
                   </span>
                 ))}
               </div>
 
-              {/* Compatibility Score — Subtle, not progress bar */}
+              {/* Compatibility Score */}
               {currentProfile.compatibilityScore && (
-                <p className="text-small text-white/60 mt-3">
+                <p className="text-tiny text-white/60">
                   {Math.round(currentProfile.compatibilityScore)}% compatible
                 </p>
               )}
             </div>
 
-            {/* View Profile Button — Minimal */}
+            {/* View Profile Button */}
             <button
               onClick={() => onViewProfile(currentProfile.id)}
-              className="absolute top-4 right-4 touch-target bg-white/10 backdrop-blur-sm rounded-full"
+              className="absolute top-3 right-3 touch-target bg-white/10 backdrop-blur-sm rounded-full"
               aria-label="View full profile"
             >
               <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -176,19 +168,19 @@ export function DiscoverFeedScreen({
             </button>
           </div>
         ) : (
-          <div className="text-center">
-            <div className="w-20 h-20 bg-pink-pale rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-10 h-10 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <div className="text-center py-12">
+            <div className="w-20 h-20 bg-rose-pale rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-10 h-10 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M8 14s1.5 2 4 2 4-2 4-2" />
                 <line x1="9" y1="9" x2="9.01" y2="9" />
                 <line x1="15" y1="9" x2="15.01" y2="9" />
               </svg>
             </div>
-            <h2 className="text-h3 text-ink mb-2" style={fontDisplay.style}>
+            <h2 className="text-h3 text-ink mb-2 font-display">
               No more profiles
             </h2>
-            <p className="text-body text-muted mb-6">
+            <p className="text-body text-stone mb-6">
               Check back later or adjust your filters
             </p>
             <button onClick={handleReset} className="btn btn-primary">
@@ -198,9 +190,9 @@ export function DiscoverFeedScreen({
         )}
       </div>
 
-      {/* Action Buttons — Larger, More Prominent */}
+      {/* Action Buttons */}
       {hasMore && (
-        <div className="px-6 pb-8 flex items-center justify-center gap-8">
+        <div className="px-4 pb-6 flex items-center justify-center gap-6">
           <button
             onClick={handlePass}
             className="w-16 h-16 rounded-full bg-white border-2 border-danger flex items-center justify-center hover:scale-105 transition-transform shadow-medium"
