@@ -1,0 +1,160 @@
+/**
+ * Chat Screen
+ *
+ * Simple chat interface for a match.
+ */
+
+import { useState } from 'react';
+import { fontDisplay } from '@/lib/fonts';
+import { getMatch, getMatchPartner } from '@/modules/matching/services/matching.service';
+import type { Match } from '@/modules/matching/types/matching.types';
+
+interface ChatScreenProps {
+  matchId: string;
+  userId: string;
+  onBack: () => void;
+}
+
+interface Message {
+  id: string;
+  text: string;
+  senderId: string;
+  timestamp: Date;
+}
+
+export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
+  const match = getMatch(matchId);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [newMessage, setNewMessage] = useState('');
+
+  if (!match) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center">
+        <p className="text-body text-muted">Match not found</p>
+      </div>
+    );
+  }
+
+  const partner = getMatchPartner(match, userId);
+
+  const handleSend = () => {
+    if (!newMessage.trim()) return;
+
+    const message: Message = {
+      id: `msg-${Date.now()}`,
+      text: newMessage,
+      senderId: userId,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, message]);
+    setNewMessage('');
+
+    // Simulate reply after 2 seconds
+    setTimeout(() => {
+      const replies = [
+        'Hey! Nice to match with you 😊',
+        'Hi there! How are you?',
+        'Hey! I saw we matched. What are you up to?',
+        'Hello! Love your profile!',
+      ];
+      const reply: Message = {
+        id: `msg-${Date.now()}-reply`,
+        text: replies[Math.floor(Math.random() * replies.length)],
+        senderId: partner.id,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, reply]);
+    }, 2000);
+  };
+
+  return (
+    <div className="min-h-screen bg-cream flex flex-col">
+      {/* Header */}
+      <header className="px-6 pt-12 pb-4 flex items-center gap-3 border-b border-line">
+        <button onClick={onBack} className="btn btn-ghost !px-3 !py-2" aria-label="Go back">
+          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <div className="w-10 h-10 bg-pink-pale rounded-full flex items-center justify-center">
+          <svg className="w-5 h-5 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+        <div className="flex-1">
+          <h1 className="text-body font-semibold text-ink">{partner.displayName}</h1>
+          <p className="text-body text-muted text-xs">
+            {partner.age} · {partner.city}
+          </p>
+        </div>
+      </header>
+
+      {/* Messages */}
+      <div className="flex-1 px-6 py-4 overflow-y-auto">
+        {messages.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-pink-pale rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <p className="text-body text-muted">
+              Say hello to {partner.displayName}!
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {messages.map((msg) => {
+              const isMe = msg.senderId === userId;
+              return (
+                <div
+                  key={msg.id}
+                  className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[70%] px-4 py-2 rounded-2xl ${
+                      isMe
+                        ? 'bg-plum text-white rounded-br-sm'
+                        : 'bg-white text-ink rounded-bl-sm border border-line'
+                    }`}
+                  >
+                    <p className="text-body">{msg.text}</p>
+                    <p className={`text-xs mt-1 ${isMe ? 'text-white/60' : 'text-muted'}`}>
+                      {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Input */}
+      <div className="px-6 pb-8 pt-4 border-t border-line">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            placeholder="Type a message..."
+            className="input flex-1"
+          />
+          <button
+            onClick={handleSend}
+            disabled={!newMessage.trim()}
+            className={`btn btn-primary !px-4 ${!newMessage.trim() ? 'btn-disabled' : ''}`}
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

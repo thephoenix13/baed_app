@@ -2,37 +2,42 @@
  * Bae'd — Main App Component
  *
  * Entry point that wires together:
- * - Direct entry (no SMS/OTP validation)
  * - Verification flow
  * - Profile creation
+ * - Discovery feed
+ * - Matches & Chat
+ * - Settings
  * - PWA components
- * - Toast notifications
  */
 
 import { useState, useCallback } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fontDisplay, fontSans, typeScale } from './lib/fonts';
-import { setupInstallPrompt } from './lib/pwa';
-import { InstallPrompt } from './components/pwa/InstallPrompt';
-import { OfflineBanner } from './components/pwa/OfflineBanner';
-import { ToastContainer } from './components/shared/ToastContainer';
-import { SplashScreen } from './app/screens/SplashScreen';
-import { WelcomeScreen } from './app/screens/WelcomeScreen';
-import { WhyVerifyScreen } from './app/screens/verification/WhyVerifyScreen';
-import { ConsentScreen } from './app/screens/verification/ConsentScreen';
-import { IdCaptureScreen } from './app/screens/verification/IdCaptureScreen';
-import { SelfieScreen } from './app/screens/verification/SelfieScreen';
-import { ProcessingScreen } from './app/screens/verification/ProcessingScreen';
-import { VerificationResultScreen } from './app/screens/verification/VerificationResultScreen';
-import { ProfileCreateScreen } from './app/screens/profile/ProfileCreateScreen';
-import { ProfilePhotosScreen } from './app/screens/profile/ProfilePhotosScreen';
-import { ProfileBioScreen } from './app/screens/profile/ProfileBioScreen';
-import { ProfileInterestsScreen } from './app/screens/profile/ProfileInterestsScreen';
-import { ProfilePreviewScreen } from './app/screens/profile/ProfilePreviewScreen';
-import { HomeScreen } from './app/screens/HomeScreen';
-import { AdminVerificationScreen } from './app/screens/admin/AdminVerificationScreen';
-import { AdminModerationScreen } from './app/screens/admin/AdminModerationScreen';
-import { useAuthStore } from './stores/auth-store';
+import { setupInstallPrompt } from '@/lib/pwa';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
+import { OfflineBanner } from '@/components/pwa/OfflineBanner';
+import { ToastContainer } from '@/components/shared/ToastContainer';
+import { BottomNav } from '@/components/layout/BottomNav';
+import { SplashScreen } from '@/app/screens/SplashScreen';
+import { WelcomeScreen } from '@/app/screens/WelcomeScreen';
+import { WhyVerifyScreen } from '@/app/screens/verification/WhyVerifyScreen';
+import { ConsentScreen } from '@/app/screens/verification/ConsentScreen';
+import { IdCaptureScreen } from '@/app/screens/verification/IdCaptureScreen';
+import { SelfieScreen } from '@/app/screens/verification/SelfieScreen';
+import { ProcessingScreen } from '@/app/screens/verification/ProcessingScreen';
+import { VerificationResultScreen } from '@/app/screens/verification/VerificationResultScreen';
+import { ProfileCreateScreen } from '@/app/screens/profile/ProfileCreateScreen';
+import { ProfilePhotosScreen } from '@/app/screens/profile/ProfilePhotosScreen';
+import { ProfileBioScreen } from '@/app/screens/profile/ProfileBioScreen';
+import { ProfileInterestsScreen } from '@/app/screens/profile/ProfileInterestsScreen';
+import { ProfilePreviewScreen } from '@/app/screens/profile/ProfilePreviewScreen';
+import { DiscoverFeedScreen } from '@/app/screens/discovery/DiscoverFeedScreen';
+import { ProfileDetailScreen } from '@/app/screens/discovery/ProfileDetailScreen';
+import { FiltersScreen } from '@/app/screens/discovery/FiltersScreen';
+import { MatchesScreen } from '@/app/screens/matches/MatchesScreen';
+import { ChatScreen } from '@/app/screens/chat/ChatScreen';
+import { SettingsScreen } from '@/app/screens/settings/SettingsScreen';
+import { useAuthStore } from '@/stores/auth-store';
+import type { Match } from '@/modules/matching/types/matching.types';
 
 // Create TanStack Query client
 const queryClient = new QueryClient({
@@ -59,12 +64,21 @@ type Screen =
   | 'profile-bio'
   | 'profile-interests'
   | 'profile-preview'
-  | 'home'
-  | 'admin-verification'
-  | 'admin-moderation';
+  | 'discover'
+  | 'profile-detail'
+  | 'filters'
+  | 'matches'
+  | 'chat'
+  | 'settings';
+
+type Tab = 'discover' | 'matches' | 'chat' | 'settings';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
+  const [activeTab, setActiveTab] = useState<Tab>('discover');
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
+  const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
+  const [newMatch, setNewMatch] = useState<Match | null>(null);
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
@@ -79,21 +93,44 @@ export default function App() {
   }, []);
 
   const handleGetStarted = useCallback(() => {
-    // Skip validation — go directly to verification explanation
     setScreen('why-verify');
   }, []);
 
-  const handleVerificationComplete = useCallback((success: boolean) => {
-    if (success) {
-      setScreen('profile-create');
-    } else {
-      setScreen('welcome');
-    }
+  const handleVerificationComplete = useCallback(() => {
+    setScreen('profile-create');
   }, []);
 
   const handleProfileComplete = useCallback(() => {
-    setScreen('home');
+    setScreen('discover');
+    setActiveTab('discover');
   }, []);
+
+  const handleTabChange = useCallback((tab: Tab) => {
+    setActiveTab(tab);
+    setScreen(tab);
+  }, []);
+
+  const handleViewProfile = useCallback((profileId: string) => {
+    setSelectedProfileId(profileId);
+    setScreen('profile-detail');
+  }, []);
+
+  const handleOpenChat = useCallback((matchId: string) => {
+    setSelectedMatchId(matchId);
+    setScreen('chat');
+  }, []);
+
+  const handleMatch = useCallback((match: Match) => {
+    setNewMatch(match);
+    setActiveTab('matches');
+    setScreen('matches');
+  }, []);
+
+  // Mock user ID for demo
+  const userId = 'demo-user-001';
+
+  // Show bottom nav for main app screens
+  const showBottomNav = ['discover', 'matches', 'chat', 'settings'].includes(screen);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -194,21 +231,70 @@ export default function App() {
           />
         )}
 
-        {/* Home */}
-        {screen === 'home' && (
-          <HomeScreen
-            onAdminVerification={() => setScreen('admin-verification')}
-            onAdminModeration={() => setScreen('admin-moderation')}
+        {/* Main App Screens */}
+        {screen === 'discover' && (
+          <DiscoverFeedScreen
+            userId={userId}
+            onViewProfile={handleViewProfile}
+            onOpenFilters={() => setScreen('filters')}
+            onMatch={handleMatch}
           />
         )}
 
-        {/* Admin Screens */}
-        {screen === 'admin-verification' && (
-          <AdminVerificationScreen onBack={() => setScreen('home')} />
+        {screen === 'profile-detail' && selectedProfileId && (
+          <ProfileDetailScreen
+            profileId={selectedProfileId}
+            onBack={() => setScreen('discover')}
+            onLike={() => {
+              // Handle like
+              setScreen('discover');
+            }}
+            onPass={() => {
+              // Handle pass
+              setScreen('discover');
+            }}
+          />
         )}
 
-        {screen === 'admin-moderation' && (
-          <AdminModerationScreen onBack={() => setScreen('home')} />
+        {screen === 'filters' && (
+          <FiltersScreen
+            onApply={() => setScreen('discover')}
+            onBack={() => setScreen('discover')}
+          />
+        )}
+
+        {screen === 'matches' && (
+          <MatchesScreen
+            userId={userId}
+            onOpenChat={handleOpenChat}
+            newMatch={newMatch}
+            onDismissMatch={() => setNewMatch(null)}
+          />
+        )}
+
+        {screen === 'chat' && selectedMatchId && (
+          <ChatScreen
+            matchId={selectedMatchId}
+            userId={userId}
+            onBack={() => {
+              setScreen('matches');
+              setActiveTab('matches');
+            }}
+          />
+        )}
+
+        {screen === 'settings' && (
+          <SettingsScreen
+            onLogout={() => {
+              useAuthStore.getState().logout();
+              setScreen('welcome');
+            }}
+          />
+        )}
+
+        {/* Bottom Navigation */}
+        {showBottomNav && (
+          <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
         )}
       </div>
     </QueryClientProvider>
