@@ -36,7 +36,7 @@ import { FiltersScreen } from '@/app/screens/discovery/FiltersScreen';
 import { MatchesScreen } from '@/app/screens/matches/MatchesScreen';
 import { MessagesScreen } from '@/app/screens/chat/MessagesScreen';
 import { ChatScreen } from '@/app/screens/chat/ChatScreen';
-import { SettingsScreen } from '@/app/screens/settings/SettingsScreen';
+import { ProfileScreen } from '@/app/screens/profile/ProfileScreen';
 import { HomeScreen } from '@/app/screens/HomeScreen';
 import { useAuthStore } from '@/stores/auth-store';
 import type { Match } from '@/modules/matching/types/matching.types';
@@ -312,7 +312,7 @@ export default function App() {
         )}
 
         {screen === 'settings' && (
-          <SettingsScreen
+          <ProfileScreen
             onLogout={() => {
               useAuthStore.getState().logout();
               setScreen('welcome');
