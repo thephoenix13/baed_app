@@ -1,8 +1,21 @@
+import { useEffect } from 'react';
 import { fontDisplay, fontSans, typeScale } from './lib/fonts';
+import { setupInstallPrompt } from './lib/pwa';
+import { InstallPrompt } from './components/pwa/InstallPrompt';
+import { OfflineBanner } from './components/pwa/OfflineBanner';
 
 export default function App() {
+  useEffect(() => {
+    // Setup PWA install prompt
+    setupInstallPrompt();
+  }, []);
+
   return (
     <div className="min-h-screen bg-cream">
+      {/* PWA Components */}
+      <OfflineBanner />
+      <InstallPrompt />
+
       {/* ═══ HERO SECTION ═══ */}
       <section className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
         {/* Brand Pill */}
@@ -12,7 +25,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Hero Headline — Using fontDisplay module */}
+        {/* Hero Headline */}
         <h1
           className={typeScale.hero + ' text-plum mb-4'}
           style={fontDisplay.style}
@@ -56,177 +69,112 @@ export default function App() {
         </div>
       </section>
 
-      {/* ═══ TYPOGRAPHY SHOWCASE ═══ */}
+      {/* ═══ IDENTITY MODULE SHOWCASE ═══ */}
       <section className="px-4 py-10 max-w-2xl mx-auto">
-        <p className="text-label text-muted mb-6">Typography Scale</p>
+        <p className="text-label text-muted mb-6">Identity Module — Phase 1</p>
 
-        <div className="space-5 flex flex-col gap-6">
-          {/* Hero */}
+        <div className="space-5 flex flex-col gap-4">
+          {/* Module Structure */}
           <div className="card">
-            <p className="text-label text-muted mb-2">Hero — DM Serif Display</p>
-            <h2 className="text-hero text-plum" style={fontDisplay.style}>
-              The quick brown fox
-            </h2>
-            <p className="text-body text-muted mt-2">
-              clamp(52px, 7vw, 88px) · 400 · -3px tracking
-            </p>
-          </div>
-
-          {/* H1 */}
-          <div className="card">
-            <p className="text-label text-muted mb-2">H1 — DM Serif Display</p>
-            <h2 className="text-h1 text-plum">
-              Connections worth trusting
-            </h2>
-            <p className="text-body text-muted mt-2">
-              clamp(38px, 5vw, 64px) · 400 · -2px tracking
-            </p>
-          </div>
-
-          {/* H2 */}
-          <div className="card">
-            <p className="text-label text-muted mb-2">H2 — DM Serif Display</p>
-            <h3 className="text-h2 text-plum">
-              Verified first, always
+            <h3 className="text-h3 text-ink mb-3" style={fontSans.style}>
+              Module Structure
             </h3>
-            <p className="text-body text-muted mt-2">
-              clamp(28px, 4vw, 44px) · 400 · -1.5px tracking
-            </p>
-          </div>
-
-          {/* H3 */}
-          <div className="card">
-            <p className="text-label text-muted mb-2">H3 — Inter 700</p>
-            <h4 className="text-h3 text-ink" style={fontSans.style}>
-              Real people. Real intentions.
-            </h4>
-            <p className="text-body text-muted mt-2">
-              22px · 700 · Inter
-            </p>
-          </div>
-
-          {/* Lead */}
-          <div className="card">
-            <p className="text-label text-muted mb-2">Lead — Inter 400</p>
-            <p className="text-lead text-muted">
-              Trust is the mechanism; connection is the promise. Every profile
-              you see belongs to a verified person.
-            </p>
-            <p className="text-body text-muted mt-2">
-              19px · 400 · Inter · muted
-            </p>
-          </div>
-
-          {/* Body */}
-          <div className="card">
-            <p className="text-label text-muted mb-2">Body — Inter 400</p>
-            <p className="text-body text-ink">
-              Bae'd is India's first verified-first dating app. We believe that
-              when you know someone is who they say they are, you can focus on
-              what matters — building a real connection.
-            </p>
-            <p className="text-body text-muted mt-2">
-              16px · 400 · Inter · ink
-            </p>
-          </div>
-
-          {/* Label */}
-          <div className="card">
-            <p className="text-label text-muted mb-2">Label — Inter 800</p>
-            <p className="text-label text-plum">
-              Verified · Trusted · Real
-            </p>
-            <p className="text-body text-muted mt-2">
-              11px · 800 · UPPERCASE · 2.5px tracking
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ COLOR SHOWCASE ═══ */}
-      <section className="px-4 py-10 max-w-2xl mx-auto">
-        <p className="text-label text-muted mb-6">Color Tokens</p>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { name: 'Plum', bg: 'bg-plum', text: 'text-white', hex: '#1B0B2C' },
-            { name: 'Pink', bg: 'bg-pink', text: 'text-white', hex: '#D9607E' },
-            { name: 'Cream', bg: 'bg-cream', text: 'text-ink', hex: '#FDF7F0', border: true },
-            { name: 'Peach', bg: 'bg-peach', text: 'text-ink', hex: '#FFE0D8' },
-            { name: 'Pink Pale', bg: 'bg-pink-pale', text: 'text-plum', hex: '#FDE8EF' },
-            { name: 'Rose White', bg: 'bg-rose-white', text: 'text-ink', hex: '#FFF0F3' },
-            { name: 'Verified', bg: 'bg-verified-green', text: 'text-white', hex: '#2B7A57' },
-            { name: 'Error', bg: 'bg-error', text: 'text-white', hex: '#B83D55' },
-          ].map((color) => (
-            <div
-              key={color.name}
-              className={`h-20 rounded-xl ${color.bg} ${color.text} flex flex-col items-center justify-center ${
-                color.border ? 'border border-line' : ''
-              }`}
-            >
-              <span className="text-body font-semibold">{color.name}</span>
-              <span className="text-xs opacity-70 font-mono">{color.hex}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══ COMPONENT SHOWCASE ═══ */}
-      <section className="px-4 py-10 max-w-2xl mx-auto">
-        <p className="text-label text-muted mb-6">Components</p>
-
-        <div className="flex flex-col gap-4">
-          {/* Buttons */}
-          <div className="card">
-            <p className="text-label text-muted mb-4">Buttons</p>
-            <div className="flex flex-wrap gap-3">
-              <button className="btn btn-primary">Primary</button>
-              <button className="btn btn-secondary">Secondary</button>
-              <button className="btn btn-ghost">Ghost</button>
-              <button className="btn btn-primary btn-disabled">Disabled</button>
+            <div className="text-body text-muted font-mono text-sm space-y-1">
+              <p>src/modules/identity/</p>
+              <p className="pl-4">├── types/</p>
+              <p className="pl-8">├── user.types.ts</p>
+              <p className="pl-8">└── otp.types.ts</p>
+              <p className="pl-4">├── schemas/</p>
+              <p className="pl-8">└── auth.schema.ts</p>
+              <p className="pl-4">├── services/</p>
+              <p className="pl-8">├── auth.service.ts</p>
+              <p className="pl-8">├── otp.service.ts</p>
+              <p className="pl-8">├── session.service.ts</p>
+              <p className="pl-8">└── device.service.ts</p>
+              <p className="pl-4">├── events/</p>
+              <p className="pl-8">└── identity.events.ts</p>
+              <p className="pl-4">├── routes/</p>
+              <p className="pl-8">└── auth-handlers.ts</p>
+              <p className="pl-4">└── index.ts</p>
             </div>
           </div>
 
-          {/* Verified Badge */}
+          {/* Features */}
           <div className="card">
-            <p className="text-label text-muted mb-4">Verified Badge</p>
-            <div className="verified-badge">
-              <svg
-                className="verified-badge-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M9 12l2 2 4-4" />
-                <circle cx="12" cy="12" r="10" />
-              </svg>
-              <span className="verified-badge-text">Identity Verified</span>
-            </div>
+            <h3 className="text-h3 text-ink mb-3" style={fontSans.style}>
+              Features Implemented
+            </h3>
+            <ul className="text-body text-muted space-y-2">
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>OTP generation & verification (SHA-256 hashed)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>JWT access tokens (15 min expiry)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Refresh tokens (30 day expiry)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Session management (create, refresh, revoke)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Device registration & tracking</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Domain events (UserCreated, UserLoggedIn, etc.)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Zod validation schemas</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Rate limiting (60s between OTP sends)</span>
+              </li>
+            </ul>
           </div>
 
-          {/* Pills */}
+          {/* PWA Features */}
           <div className="card">
-            <p className="text-label text-muted mb-4">Pills / Tags</p>
-            <div className="flex flex-wrap gap-2">
-              <span className="pill">Coffee lover</span>
-              <span className="pill">Travel</span>
-              <span className="pill pill-active">Mumbai</span>
-              <span className="pill">Long-term</span>
-            </div>
-          </div>
-
-          {/* Input */}
-          <div className="card">
-            <p className="text-label text-muted mb-4">Input</p>
-            <label className="block text-body font-semibold text-ink mb-2">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              className="input"
-              placeholder="+91 98765 43210"
-            />
+            <h3 className="text-h3 text-ink mb-3" style={fontSans.style}>
+              PWA Features
+            </h3>
+            <ul className="text-body text-muted space-y-2">
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Service worker with vite-plugin-pwa</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Web App Manifest (installable)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Install prompt component (Android/Chrome)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>iOS "Add to Home Screen" instructions</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Offline detection banner</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Push notification utilities</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-verified-green">✓</span>
+                <span>Font caching (Google Fonts)</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
