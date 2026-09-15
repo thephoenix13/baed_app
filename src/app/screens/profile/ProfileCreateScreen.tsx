@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { fontDisplay } from '@/lib/fonts';
 
 interface ProfileCreateScreenProps {
   onComplete: () => void;
@@ -15,31 +14,24 @@ export function ProfileCreateScreen({ onComplete, onBack }: ProfileCreateScreenP
   const isValid = name.length >= 2 && age && gender && city;
 
   return (
-    <div className="min-h-screen bg-cream flex flex-col">
-      <div className="px-6 pt-12 pb-4">
-        <button onClick={onBack} className="btn btn-ghost !px-3 !py-2" aria-label="Go back">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <div className="page flex flex-col">
+      <div className="page-header flex items-center">
+        <button onClick={onBack} className="btn-icon -ml-3" aria-label="Back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
       </div>
 
-      <div className="flex-1 px-6">
-        <h1 className="text-h2 text-plum mb-2" style={fontDisplay.style}>
-          Let's build your profile
-        </h1>
-        <p className="text-lead mb-8">
-          Tell us a bit about yourself.
-        </p>
+      <div className="page-content flex-1">
+        <h1 className="text-screen-title mb-2">Let's build your profile</h1>
+        <p className="text-body-secondary mb-8">Tell us a bit about yourself.</p>
 
-        <div className="space-y-5">
+        <div className="space-y-6">
           {/* Name */}
-          <div>
-            <label htmlFor="name" className="text-label text-muted mb-1 block">
-              First Name
-            </label>
+          <div className="field">
+            <label className="field-label">First Name</label>
             <input
-              id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -49,12 +41,9 @@ export function ProfileCreateScreen({ onComplete, onBack }: ProfileCreateScreenP
           </div>
 
           {/* Age */}
-          <div>
-            <label htmlFor="age" className="text-label text-muted mb-1 block">
-              Age
-            </label>
+          <div className="field">
+            <label className="field-label">Age</label>
             <input
-              id="age"
               type="number"
               value={age}
               onChange={(e) => setAge(e.target.value)}
@@ -66,14 +55,14 @@ export function ProfileCreateScreen({ onComplete, onBack }: ProfileCreateScreenP
           </div>
 
           {/* Gender */}
-          <div>
-            <label className="text-label text-muted mb-2 block">Gender</label>
-            <div className="grid grid-cols-2 gap-2">
+          <div className="field">
+            <label className="field-label">Gender</label>
+            <div className="flex flex-wrap gap-2">
               {['Man', 'Woman', 'Non-binary', 'Other'].map((g) => (
                 <button
                   key={g}
                   onClick={() => setGender(g)}
-                  className={`btn ${gender === g ? 'btn-primary' : 'btn-ghost'}`}
+                  className={`chip ${gender === g ? 'chip-selected' : ''}`}
                 >
                   {g}
                 </button>
@@ -82,16 +71,14 @@ export function ProfileCreateScreen({ onComplete, onBack }: ProfileCreateScreenP
           </div>
 
           {/* City */}
-          <div>
-            <label htmlFor="city" className="text-label text-muted mb-1 block">
-              City
-            </label>
+          <div className="field">
+            <label className="field-label">City</label>
             <div className="flex flex-wrap gap-2">
               {['Mumbai', 'Pune', 'Bengaluru', 'Delhi', 'Other'].map((c) => (
                 <button
                   key={c}
                   onClick={() => setCity(c)}
-                  className={`pill ${city === c ? 'pill-active' : ''}`}
+                  className={`chip ${city === c ? 'chip-selected' : ''}`}
                 >
                   {c}
                 </button>
@@ -101,11 +88,11 @@ export function ProfileCreateScreen({ onComplete, onBack }: ProfileCreateScreenP
         </div>
       </div>
 
-      <div className="px-6 pb-8 pt-4">
+      <div className="page-content pb-8 pt-6">
         <button
           onClick={onComplete}
           disabled={!isValid}
-          className={`btn btn-primary w-full ${!isValid ? 'btn-disabled' : ''}`}
+          className={`btn btn-primary ${!isValid ? 'btn-disabled' : ''}`}
         >
           Continue
         </button>

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { fontDisplay } from '@/lib/fonts';
 
 interface ProfileBioScreenProps {
   onComplete: () => void;
@@ -12,45 +11,37 @@ export function ProfileBioScreen({ onComplete, onBack }: ProfileBioScreenProps) 
   const [intent, setIntent] = useState('');
 
   return (
-    <div className="min-h-screen bg-cream flex flex-col">
-      <div className="px-6 pt-12 pb-4">
-        <button onClick={onBack} className="btn btn-ghost !px-3 !py-2" aria-label="Go back">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <div className="page flex flex-col">
+      <div className="page-header flex items-center">
+        <button onClick={onBack} className="btn-icon -ml-3" aria-label="Back">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
       </div>
 
-      <div className="flex-1 px-6">
-        <h1 className="text-h2 text-plum mb-2" style={fontDisplay.style}>
-          About you
-        </h1>
-        <p className="text-lead mb-8">
-          Help others get to know you.
-        </p>
+      <div className="page-content flex-1">
+        <h1 className="text-screen-title mb-2">About you</h1>
+        <p className="text-body-secondary mb-8">Help others get to know you.</p>
 
-        <div className="space-y-5">
-          <div>
-            <label htmlFor="bio" className="text-label text-muted mb-1 block">
-              Bio
-            </label>
+        <div className="space-y-6">
+          {/* Bio */}
+          <div className="field">
+            <label className="field-label">Bio</label>
             <textarea
-              id="bio"
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Write a few lines about yourself..."
-              className="input min-h-[120px] resize-none"
+              className="input"
               maxLength={500}
             />
-            <p className="text-body text-muted text-xs mt-1 text-right">{bio.length}/500</p>
+            <p className="text-small text-right">{bio.length}/500</p>
           </div>
 
-          <div>
-            <label htmlFor="occupation" className="text-label text-muted mb-1 block">
-              Occupation
-            </label>
+          {/* Occupation */}
+          <div className="field">
+            <label className="field-label">Occupation</label>
             <input
-              id="occupation"
               type="text"
               value={occupation}
               onChange={(e) => setOccupation(e.target.value)}
@@ -59,14 +50,15 @@ export function ProfileBioScreen({ onComplete, onBack }: ProfileBioScreenProps) 
             />
           </div>
 
-          <div>
-            <label className="text-label text-muted mb-2 block">Looking for</label>
+          {/* Intent */}
+          <div className="field">
+            <label className="field-label">Looking for</label>
             <div className="flex flex-wrap gap-2">
               {['Long-term', 'Short-term', 'Marriage', 'Friendship', 'Unsure'].map((i) => (
                 <button
                   key={i}
                   onClick={() => setIntent(i)}
-                  className={`pill ${intent === i ? 'pill-active' : ''}`}
+                  className={`chip ${intent === i ? 'chip-selected' : ''}`}
                 >
                   {i}
                 </button>
@@ -76,8 +68,8 @@ export function ProfileBioScreen({ onComplete, onBack }: ProfileBioScreenProps) 
         </div>
       </div>
 
-      <div className="px-6 pb-8 pt-4">
-        <button onClick={onComplete} className="btn btn-primary w-full">
+      <div className="page-content pb-8 pt-6">
+        <button onClick={onComplete} className="btn btn-primary">
           Continue
         </button>
       </div>

@@ -1,9 +1,3 @@
-/**
- * Splash Screen — Native App Style
- *
- * Compact, fast, native mobile app feel.
- */
-
 import { useEffect } from 'react';
 
 interface SplashScreenProps {
@@ -17,27 +11,35 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
   }, [onComplete]);
 
   return (
-    <div className="min-h-screen bg-cream flex flex-col items-center justify-center px-4">
-      {/* Brand Mark */}
-      <div className="animate-fade-in">
-        <h1 className="text-hero text-plum text-center font-display">
-          Bae'd
-        </h1>
-        <p className="text-lead text-stone text-center mt-3">
-          Dating, without the doubt.
-        </p>
+    <div className="min-h-dvh bg-[var(--color-bg)] flex flex-col items-center justify-center">
+      {/* Logo mark */}
+      <div className="mb-6">
+        <svg width="48" height="48" viewBox="0 0 40 40" fill="none">
+          <path
+            d="M20 35s-12-6.5-12-15.5C8 12.5 13.5 7 20 7s12 5.5 12 12.5C32 28.5 20 35 20 35z"
+            fill="var(--color-accent)"
+            opacity="0.15"
+          />
+          <path
+            d="M20 33s-10-5.5-10-13.5C10 13 14.5 9 20 9s10 4 10 10.5C30 27.5 20 33 20 33z"
+            stroke="var(--color-accent)"
+            strokeWidth="1.5"
+            fill="none"
+          />
+        </svg>
       </div>
 
-      {/* Loading Indicator */}
-      <div className="mt-8">
-        <div className="spinner" style={{ borderTopColor: 'var(--color-rose)', borderColor: 'var(--color-rose-pale)' }}></div>
-      </div>
+      {/* Brand name */}
+      <h1 className="text-screen-title mb-2" style={{ letterSpacing: '-0.03em' }}>
+        Bae'd
+      </h1>
 
-      {/* Footer */}
-      <div className="absolute bottom-6 text-center">
-        <p className="text-tiny text-stone">
-          Mumbai · Pune · Bengaluru
-        </p>
+      {/* Tagline */}
+      <p className="text-body-secondary">Dating, without the doubt.</p>
+
+      {/* Loading indicator */}
+      <div className="mt-12">
+        <div className="spinner" />
       </div>
     </div>
   );

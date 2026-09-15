@@ -37,12 +37,10 @@ export function DiscoverFeedScreen({
     setSwipeDirection('right');
     setTimeout(() => {
       const result = likeProfile(userId, profile.userId);
-      if (result.isMatch && result.match) {
-        onMatch(result.match);
-      }
+      if (result.isMatch && result.match) onMatch(result.match);
       setCurrentIndex((prev) => prev + 1);
       setSwipeDirection(null);
-    }, 300);
+    }, 250);
   };
 
   const handlePass = () => {
@@ -53,7 +51,7 @@ export function DiscoverFeedScreen({
       passProfile(userId, profile.userId);
       setCurrentIndex((prev) => prev + 1);
       setSwipeDirection(null);
-    }, 300);
+    }, 250);
   };
 
   const handleReset = () => {
@@ -65,113 +63,101 @@ export function DiscoverFeedScreen({
   const hasMore = currentIndex < profiles.length;
 
   return (
-    <div className="min-h-screen bg-white relative">
-      {/* Profile Card - Full Bleed Photo */}
-      {hasMore && currentProfile ? (
-        <div
-          className={`relative w-full h-screen transition-transform duration-300 ${
-            swipeDirection === 'left'
-              ? '-translate-x-full -rotate-12 opacity-0'
-              : swipeDirection === 'right'
-              ? 'translate-x-full rotate-12 opacity-0'
-              : ''
-          }`}
-        >
-          {/* Large Photo - Takes up 85% of screen */}
-          <div className="absolute inset-0 bg-gradient-to-b from-stone-200 to-stone-300">
-            <div className="w-full h-full flex items-center justify-center">
-              <svg className="w-32 h-32 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+    <div className="page" style={{ paddingBottom: 88 }}>
+      {/* Header */}
+      <div className="page-header flex items-center justify-between">
+        <h1 className="text-screen-title">Discover</h1>
+        <button onClick={onOpenFilters} className="btn-icon" aria-label="Filters">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <line x1="4" y1="21" x2="4" y2="14" />
+            <line x1="4" y1="10" x2="4" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12" y2="3" />
+            <line x1="20" y1="21" x2="20" y2="16" />
+            <line x1="20" y1="12" x2="20" y2="3" />
+            <line x1="1" y1="14" x2="7" y2="14" />
+            <line x1="9" y1="8" x2="15" y2="8" />
+            <line x1="17" y1="16" x2="23" y2="16" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Card */}
+      <div className="px-6">
+        {hasMore && currentProfile ? (
+          <div
+            className={`profile-card transition-all duration-250 ${
+              swipeDirection === 'left'
+                ? '-translate-x-[120%] -rotate-12 opacity-0'
+                : swipeDirection === 'right'
+                ? 'translate-x-[120%] rotate-12 opacity-0'
+                : ''
+            }`}
+          >
+            {/* Photo placeholder */}
+            <div className="absolute inset-0 bg-[var(--color-bg-chip)] flex items-center justify-center">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" strokeWidth="1">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
             </div>
-          </div>
 
-          {/* Gradient Overlay at Bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-
-          {/* Profile Info - Minimal Overlay */}
-          <div className="absolute bottom-32 left-6 right-6 text-white">
-            <div className="flex items-center gap-2 mb-2">
-              <h1 className="text-4xl font-bold">
-                {currentProfile.displayName}
-              </h1>
-              <span className="text-3xl font-light">{currentProfile.age}</span>
-              {currentProfile.isVerified && (
-                <svg className="w-6 h-6 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              )}
+            {/* Info overlay */}
+            <div className="profile-card-info">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[22px] font-semibold">{currentProfile.displayName}</span>
+                <span className="text-[22px] font-light">{currentProfile.age}</span>
+                {currentProfile.isVerified && (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" opacity="0.9">
+                    <path d="M9 12l2 2 4-4" />
+                    <circle cx="12" cy="12" r="10" />
+                  </svg>
+                )}
+              </div>
+              <p className="text-[15px] text-white/80">{currentProfile.occupation}</p>
+              <p className="text-[13px] text-white/60 mt-0.5">{currentProfile.city} · {currentProfile.distance} km</p>
             </div>
-            <p className="text-lg opacity-90 mb-1">
-              {currentProfile.occupation}
-            </p>
-            <p className="text-base opacity-75">
-              {currentProfile.city} · {currentProfile.distance} km away
-            </p>
           </div>
-
-          {/* Action Buttons - Bottom */}
-          <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-6">
-            <button
-              onClick={handlePass}
-              className="w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
-              aria-label="Pass"
-            >
-              <svg className="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
+        ) : (
+          <div className="empty-state" style={{ minHeight: '60vh' }}>
+            <div className="empty-state-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                <line x1="9" y1="9" x2="9.01" y2="9" />
+                <line x1="15" y1="9" x2="15.01" y2="9" />
               </svg>
-            </button>
-
-            <button
-              onClick={handleLike}
-              className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 shadow-lg flex items-center justify-center hover:scale-110 transition-transform"
-              aria-label="Like"
-            >
-              <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
+            </div>
+            <p className="text-section-title mb-2">No more profiles</p>
+            <p className="text-body-secondary mb-6">Check back later or adjust your filters</p>
+            <button onClick={handleReset} className="btn btn-secondary" style={{ width: 'auto', padding: '0 24px' }}>
+              Start Over
             </button>
           </div>
+        )}
+      </div>
 
-          {/* Filter Button - Top Right */}
+      {/* Actions */}
+      {hasMore && (
+        <div className="flex items-center justify-center gap-5 mt-6">
           <button
-            onClick={onOpenFilters}
-            className="absolute top-12 right-4 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
-            aria-label="Filters"
+            onClick={handlePass}
+            className="w-14 h-14 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-card)] flex items-center justify-center"
+            aria-label="Pass"
           >
-            <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="4" y1="21" x2="4" y2="14" />
-              <line x1="4" y1="10" x2="4" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12" y2="3" />
-              <line x1="20" y1="21" x2="20" y2="16" />
-              <line x1="20" y1="12" x2="20" y2="3" />
-              <line x1="1" y1="14" x2="7" y2="14" />
-              <line x1="9" y1="8" x2="15" y2="8" />
-              <line x1="17" y1="16" x2="23" y2="16" />
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-error)" strokeWidth="2.5">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-        </div>
-      ) : (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6">
-          <div className="w-24 h-24 bg-rose-100 rounded-full flex items-center justify-center mb-6">
-            <svg className="w-12 h-12 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-              <line x1="9" y1="9" x2="9.01" y2="9" />
-              <line x1="15" y1="9" x2="15.01" y2="9" />
+          <button
+            onClick={handleLike}
+            className="w-16 h-16 rounded-full bg-[var(--color-accent)] flex items-center justify-center"
+            aria-label="Like"
+          >
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="0">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
             </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            No more profiles
-          </h2>
-          <p className="text-gray-600 text-center mb-8">
-            Check back later or adjust your filters
-          </p>
-          <button onClick={handleReset} className="px-8 py-3 bg-rose-500 text-white rounded-full font-semibold hover:bg-rose-600 transition-colors">
-            Reset & Start Over
           </button>
         </div>
       )}
