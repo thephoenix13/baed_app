@@ -34,6 +34,7 @@ import { DiscoverFeedScreen } from '@/app/screens/discovery/DiscoverFeedScreen';
 import { ProfileDetailScreen } from '@/app/screens/discovery/ProfileDetailScreen';
 import { FiltersScreen } from '@/app/screens/discovery/FiltersScreen';
 import { MatchesScreen } from '@/app/screens/matches/MatchesScreen';
+import { MessagesScreen } from '@/app/screens/chat/MessagesScreen';
 import { ChatScreen } from '@/app/screens/chat/ChatScreen';
 import { SettingsScreen } from '@/app/screens/settings/SettingsScreen';
 import { HomeScreen } from '@/app/screens/HomeScreen';
@@ -70,6 +71,7 @@ type Screen =
   | 'profile-detail'
   | 'filters'
   | 'matches'
+  | 'messages'
   | 'chat'
   | 'settings'
   | 'admin-verification'
@@ -110,7 +112,12 @@ export default function App() {
 
   const handleTabChange = useCallback((tab: Tab) => {
     setActiveTab(tab);
-    setScreen(tab);
+    // Navigate to messages screen when chat tab is selected
+    if (tab === 'chat') {
+      setScreen('messages');
+    } else {
+      setScreen(tab);
+    }
   }, []);
 
   const handleViewProfile = useCallback((profileId: string) => {
@@ -133,7 +140,7 @@ export default function App() {
   const userId = 'demo-user-001';
 
   // Show bottom nav for main app screens (except discover which has its own)
-  const showBottomNav = ['home', 'matches', 'chat', 'settings'].includes(screen);
+  const showBottomNav = ['home', 'matches', 'messages', 'chat', 'settings'].includes(screen);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -283,13 +290,23 @@ export default function App() {
           />
         )}
 
+        {screen === 'messages' && (
+          <MessagesScreen
+            userId={userId}
+            onOpenConversation={(matchId) => {
+              setSelectedMatchId(matchId);
+              setScreen('chat');
+            }}
+          />
+        )}
+
         {screen === 'chat' && selectedMatchId && (
           <ChatScreen
             matchId={selectedMatchId}
             userId={userId}
             onBack={() => {
-              setScreen('matches');
-              setActiveTab('matches');
+              setScreen('messages');
+              setActiveTab('chat');
             }}
           />
         )}
