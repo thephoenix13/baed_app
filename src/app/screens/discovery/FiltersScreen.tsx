@@ -1,11 +1,10 @@
 /**
  * Filters Screen
  *
- * Discovery preferences and filters.
+ * Premium, effortless filtering experience.
  */
 
 import { useState } from 'react';
-import { fontDisplay } from '@/lib/fonts';
 import { getDefaultFilters } from '@/modules/discovery/services/discovery.service';
 import type { DiscoveryFilters } from '@/modules/discovery/types/discovery.types';
 
@@ -16,6 +15,7 @@ interface FiltersScreenProps {
 
 export function FiltersScreen({ onApply, onBack }: FiltersScreenProps) {
   const [filters, setFilters] = useState<DiscoveryFilters>(getDefaultFilters());
+  const [showOptional, setShowOptional] = useState(false);
 
   const handleAgeChange = (field: 'minAge' | 'maxAge', value: number) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
@@ -29,6 +29,10 @@ export function FiltersScreen({ onApply, onBack }: FiltersScreenProps) {
     setFilters((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
+  const handleReset = () => {
+    setFilters(getDefaultFilters());
+  };
+
   const handleApply = () => {
     onApply(filters);
   };
@@ -36,104 +40,197 @@ export function FiltersScreen({ onApply, onBack }: FiltersScreenProps) {
   return (
     <div className="min-h-screen bg-cream flex flex-col">
       {/* Header */}
-      <div className="px-6 pt-12 pb-4 flex items-center gap-3">
-        <button onClick={onBack} className="btn btn-ghost !px-3 !py-2" aria-label="Go back">
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
+      <div className="px-6 pt-12 pb-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button onClick={onBack} className="btn-icon" aria-label="Go back">
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 className="text-h2 text-plum">Filters</h1>
+        </div>
+        <button onClick={handleReset} className="btn btn-ghost !px-4 !py-2 text-sm">
+          Reset
         </button>
-        <h1 className="text-h3 text-plum" style={fontDisplay.style}>
-          Filters
-        </h1>
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-6 pb-8">
+      <div className="flex-1 px-6 pb-32 overflow-y-auto">
         {/* Age Range */}
-        <div className="card mb-4">
-          <h3 className="text-label text-muted mb-3">Age Range</h3>
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <label className="text-body text-muted text-sm mb-1 block">Min</label>
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-label text-muted">AGE</h3>
+            <span className="text-body text-ink font-medium">
+              {filters.minAge} — {filters.maxAge}
+            </span>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className="text-small text-muted mb-2 block">Min age</label>
               <input
-                type="number"
+                type="range"
                 value={filters.minAge}
                 onChange={(e) => handleAgeChange('minAge', parseInt(e.target.value))}
                 min={18}
                 max={filters.maxAge}
-                className="input"
+                className="w-full h-1 bg-cream rounded-full appearance-none cursor-pointer accent-pink"
               />
             </div>
-            <span className="text-body text-muted mt-6">to</span>
-            <div className="flex-1">
-              <label className="text-body text-muted text-sm mb-1 block">Max</label>
+            <div>
+              <label className="text-small text-muted mb-2 block">Max age</label>
               <input
-                type="number"
+                type="range"
                 value={filters.maxAge}
                 onChange={(e) => handleAgeChange('maxAge', parseInt(e.target.value))}
                 min={filters.minAge}
                 max={99}
-                className="input"
+                className="w-full h-1 bg-cream rounded-full appearance-none cursor-pointer accent-pink"
               />
             </div>
           </div>
         </div>
 
         {/* Distance */}
-        <div className="card mb-4">
-          <h3 className="text-label text-muted mb-3">Maximum Distance</h3>
-          <div className="flex items-center gap-4">
-            <input
-              type="range"
-              value={filters.maxDistance}
-              onChange={(e) => handleDistanceChange(parseInt(e.target.value))}
-              min={1}
-              max={100}
-              className="flex-1"
-            />
-            <span className="text-body text-ink font-semibold min-w-[60px] text-right">
-              {filters.maxDistance} km
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-label text-muted">DISTANCE</h3>
+            <span className="text-body text-ink font-medium">
+              Within {filters.maxDistance} km
             </span>
           </div>
+          <input
+            type="range"
+            value={filters.maxDistance}
+            onChange={(e) => handleDistanceChange(parseInt(e.target.value))}
+            min={1}
+            max={100}
+            className="w-full h-1 bg-cream rounded-full appearance-none cursor-pointer accent-pink"
+          />
         </div>
 
-        {/* Gender Preferences */}
-        <div className="card mb-4">
-          <h3 className="text-label text-muted mb-3">Show Me</h3>
-          <div className="space-y-2">
+        {/* Show Me */}
+        <div className="mb-8">
+          <h3 className="text-label text-muted mb-4">SHOW ME</h3>
+          <div className="flex gap-3">
             <button
               onClick={() => handleGenderToggle('interestedInMen')}
-              className={`btn w-full ${filters.interestedInMen ? 'btn-primary' : 'btn-ghost'}`}
+              className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all ${
+                filters.interestedInMen
+                  ? 'bg-pink-pale border-pink text-plum'
+                  : 'bg-white border-cream text-muted'
+              }`}
             >
-              Men
+              <div className="flex items-center justify-center gap-2">
+                {filters.interestedInMen && (
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+                <span className="text-body font-medium">Men</span>
+              </div>
             </button>
             <button
               onClick={() => handleGenderToggle('interestedInWomen')}
-              className={`btn w-full ${filters.interestedInWomen ? 'btn-primary' : 'btn-ghost'}`}
+              className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all ${
+                filters.interestedInWomen
+                  ? 'bg-pink-pale border-pink text-plum'
+                  : 'bg-white border-cream text-muted'
+              }`}
             >
-              Women
+              <div className="flex items-center justify-center gap-2">
+                {filters.interestedInWomen && (
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+                <span className="text-body font-medium">Women</span>
+              </div>
             </button>
             <button
               onClick={() => handleGenderToggle('interestedInNonBinary')}
-              className={`btn w-full ${filters.interestedInNonBinary ? 'btn-primary' : 'btn-ghost'}`}
+              className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all ${
+                filters.interestedInNonBinary
+                  ? 'bg-pink-pale border-pink text-plum'
+                  : 'bg-white border-cream text-muted'
+              }`}
             >
-              Non-binary
+              <div className="flex items-center justify-center gap-2">
+                {filters.interestedInNonBinary && (
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+                <span className="text-body font-medium">Non-binary</span>
+              </div>
             </button>
           </div>
         </div>
 
-        {/* Info */}
-        <div className="bg-pink-pale rounded-xl p-4">
-          <p className="text-body text-plum text-sm">
-            💡 Filters help us show you the most relevant profiles. You can change them anytime.
-          </p>
+        {/* Optional Filters */}
+        <div className="mb-8">
+          <button
+            onClick={() => setShowOptional(!showOptional)}
+            className="w-full flex items-center justify-between py-3"
+          >
+            <h3 className="text-label text-muted">OPTIONAL FILTERS</h3>
+            <svg
+              className={`w-5 h-5 text-muted transition-transform ${showOptional ? 'rotate-180' : ''}`}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          {showOptional && (
+            <div className="space-y-3 mt-4">
+              <div className="flex items-center justify-between py-3 border-b border-cream">
+                <span className="text-body text-ink">Interests</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-small text-muted">Any</span>
+                  <svg className="w-4 h-4 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex items-center justify-between py-3 border-b border-cream">
+                <span className="text-body text-ink">Relationship goals</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-small text-muted">Any</span>
+                  <svg className="w-4 h-4 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex items-center justify-between py-3 border-b border-cream">
+                <span className="text-body text-ink">Occupation</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-small text-muted">Any</span>
+                  <svg className="w-4 h-4 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex items-center justify-between py-3">
+                <span className="text-body text-ink">City</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-small text-muted">Any</span>
+                  <svg className="w-4 h-4 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Apply Button */}
-      <div className="px-6 pb-8">
+      {/* Sticky CTA */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-cream px-6 py-4 pb-6">
         <button onClick={handleApply} className="btn btn-primary w-full">
-          Apply Filters
+          Show 24 people
         </button>
       </div>
     </div>
