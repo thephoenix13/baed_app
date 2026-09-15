@@ -37,18 +37,18 @@ export function IdCaptureScreen({ onCapture, onBack }: IdCaptureScreenProps) {
                 </svg>
               </div>
               <p className="text-body font-semibold text-ink">ID Captured!</p>
-              <p className="text-body text-muted text-sm mt-1">Looking good</p>
+              <p className="text-body text-stone text-sm mt-1">Looking good</p>
             </div>
           ) : (
             <div className="text-center px-6">
-              <div className="w-16 h-16 bg-pink-pale rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <div className="w-16 h-16 bg-rose-pale rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                   <circle cx="8.5" cy="8.5" r="1.5" />
                   <polyline points="21 15 16 10 5 21" />
                 </svg>
               </div>
-              <p className="text-body text-muted mb-4">
+              <p className="text-body text-stone mb-4">
                 Position your ID within the frame
               </p>
               <button
@@ -62,7 +62,7 @@ export function IdCaptureScreen({ onCapture, onBack }: IdCaptureScreenProps) {
         </div>
 
         {/* Tips */}
-        <div className="bg-pink-pale rounded-xl p-4 mb-6">
+        <div className="bg-rose-pale rounded-xl p-4 mb-6">
           <p className="text-label text-plum mb-2">Tips for a good photo</p>
           <ul className="text-body text-plum text-sm space-y-1">
             <li>• Ensure all text is clearly readable</li>

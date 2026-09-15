@@ -30,7 +30,7 @@ export function ConsentScreen({ onAccept, onBack }: ConsentScreenProps) {
               <span className="w-6 h-6 bg-plum text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">1</span>
               <div>
                 <h3 className="text-body font-semibold text-ink">Photo your ID</h3>
-                <p className="text-body text-muted text-sm">Aadhaar, PAN, Passport, or Driver's License</p>
+                <p className="text-body text-stone text-sm">Aadhaar, PAN, Passport, or Driver's License</p>
               </div>
             </div>
           </div>
@@ -40,7 +40,7 @@ export function ConsentScreen({ onAccept, onBack }: ConsentScreenProps) {
               <span className="w-6 h-6 bg-plum text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">2</span>
               <div>
                 <h3 className="text-body font-semibold text-ink">Take a selfie</h3>
-                <p className="text-body text-muted text-sm">We'll match your face to your ID photo</p>
+                <p className="text-body text-stone text-sm">We'll match your face to your ID photo</p>
               </div>
             </div>
           </div>
@@ -50,13 +50,13 @@ export function ConsentScreen({ onAccept, onBack }: ConsentScreenProps) {
               <span className="w-6 h-6 bg-plum text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">3</span>
               <div>
                 <h3 className="text-body font-semibold text-ink">We verify</h3>
-                <p className="text-body text-muted text-sm">Your ID is checked by our verification partner. We never store your document.</p>
+                <p className="text-body text-stone text-sm">Your ID is checked by our verification partner. We never store your document.</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-pink-pale rounded-xl p-4 mb-6">
+        <div className="bg-rose-pale rounded-xl p-4 mb-6">
           <p className="text-body text-plum text-sm">
             🔒 Your ID document is processed securely and never stored on our servers. Only a verification reference is kept.
           </p>

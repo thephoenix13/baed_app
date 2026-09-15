@@ -40,12 +40,12 @@ export function SelfieScreen({ onCapture, onBack }: SelfieScreenProps) {
           ) : (
             <div className="text-center px-6">
               <div className="w-24 h-24 border-4 border-pink/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-12 h-12 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg className="w-12 h-12 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               </div>
-              <p className="text-body text-muted mb-4">
+              <p className="text-body text-stone mb-4">
                 Position your face in the circle
               </p>
               <button onClick={() => setCaptured(true)} className="btn btn-primary">
@@ -55,7 +55,7 @@ export function SelfieScreen({ onCapture, onBack }: SelfieScreenProps) {
           )}
         </div>
 
-        <div className="bg-pink-pale rounded-xl p-4 mb-6">
+        <div className="bg-rose-pale rounded-xl p-4 mb-6">
           <ul className="text-body text-plum text-sm space-y-1">
             <li>• Look directly at the camera</li>
             <li>• Remove glasses, hats, or masks</li>

@@ -77,8 +77,8 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
-        <div className="w-10 h-10 bg-pink-pale rounded-full flex items-center justify-center">
-          <svg className="w-5 h-5 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+        <div className="w-10 h-10 bg-rose-pale rounded-full flex items-center justify-center">
+          <svg className="w-5 h-5 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
@@ -95,12 +95,12 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
       <div className="flex-1 px-6 py-4 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-pink-pale rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <div className="w-16 h-16 bg-rose-pale rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
             </div>
-            <p className="text-body text-muted">
+            <p className="text-body text-stone">
               Say hello to {partner.displayName}!
             </p>
           </div>
@@ -116,12 +116,12 @@ export function ChatScreen({ matchId, userId, onBack }: ChatScreenProps) {
                   <div
                     className={`max-w-[70%] px-4 py-2 rounded-2xl ${
                       isMe
-                        ? 'bg-plum text-white rounded-br-sm'
+                        ? 'bg-rose text-white rounded-br-sm'
                         : 'bg-white text-ink rounded-bl-sm border border-line'
                     }`}
                   >
                     <p className="text-body">{msg.text}</p>
-                    <p className={`text-xs mt-1 ${isMe ? 'text-white/60' : 'text-muted'}`}>
+                    <p className={`text-xs mt-1 ${isMe ? 'text-white/60' : 'text-stone'}`}>
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>

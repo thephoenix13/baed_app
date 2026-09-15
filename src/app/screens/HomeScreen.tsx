@@ -37,30 +37,30 @@ export function HomeScreen({ onAdminVerification, onAdminModeration }: HomeScree
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-3 mb-8">
           <button className="card text-left hover:shadow-elevated transition-shadow">
-            <div className="w-10 h-10 bg-pink-pale rounded-xl flex items-center justify-center mb-3">
-              <svg className="w-5 h-5 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <div className="w-10 h-10 bg-rose-pale rounded-xl flex items-center justify-center mb-3">
+              <svg className="w-5 h-5 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8" />
                 <path d="M21 21l-4.35-4.35" />
               </svg>
             </div>
             <h3 className="text-body font-semibold text-ink">Discover</h3>
-            <p className="text-body text-muted text-sm">Find matches</p>
+            <p className="text-body text-stone text-sm">Find matches</p>
           </button>
 
           <button className="card text-left hover:shadow-elevated transition-shadow">
-            <div className="w-10 h-10 bg-pink-pale rounded-xl flex items-center justify-center mb-3">
-              <svg className="w-5 h-5 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <div className="w-10 h-10 bg-rose-pale rounded-xl flex items-center justify-center mb-3">
+              <svg className="w-5 h-5 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </div>
             <h3 className="text-body font-semibold text-ink">Matches</h3>
-            <p className="text-body text-muted text-sm">Your connections</p>
+            <p className="text-body text-stone text-sm">Your connections</p>
           </button>
         </div>
 
         {/* Admin Section */}
         <div className="mb-6">
-          <p className="text-label text-muted mb-3">Admin Console</p>
+          <p className="text-label text-stone mb-3">Admin Console</p>
           <div className="space-y-2">
             <button
               onClick={onAdminVerification}
@@ -75,7 +75,7 @@ export function HomeScreen({ onAdminVerification, onAdminModeration }: HomeScree
                 </div>
                 <div>
                   <h3 className="text-body font-semibold text-ink">Verification Queue</h3>
-                  <p className="text-body text-muted text-sm">Review pending verifications</p>
+                  <p className="text-body text-stone text-sm">Review pending verifications</p>
                 </div>
               </div>
             </button>
@@ -92,7 +92,7 @@ export function HomeScreen({ onAdminVerification, onAdminModeration }: HomeScree
                 </div>
                 <div>
                   <h3 className="text-body font-semibold text-ink">Photo Moderation</h3>
-                  <p className="text-body text-muted text-sm">Review flagged photos</p>
+                  <p className="text-body text-stone text-sm">Review flagged photos</p>
                 </div>
               </div>
             </button>
@@ -102,7 +102,7 @@ export function HomeScreen({ onAdminVerification, onAdminModeration }: HomeScree
 
       {/* Footer */}
       <footer className="px-6 py-8 text-center">
-        <p className="text-body text-muted text-sm">
+        <p className="text-body text-stone text-sm">
           Bae'd — Dating, without the doubt.
         </p>
       </footer>

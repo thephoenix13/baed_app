@@ -25,8 +25,8 @@ export function SettingsScreen({ onLogout }: SettingsScreenProps) {
         {/* Profile Section */}
         <div className="card mb-4">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-16 h-16 bg-pink-pale rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-pink" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <div className="w-16 h-16 bg-rose-pale rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-rose" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
@@ -47,7 +47,7 @@ export function SettingsScreen({ onLogout }: SettingsScreenProps) {
 
         {/* Preferences */}
         <div className="card mb-4">
-          <h3 className="text-label text-muted mb-3">Preferences</h3>
+          <h3 className="text-label text-stone mb-3">Preferences</h3>
           <div className="space-y-2">
             <button className="btn btn-ghost w-full justify-between">
               <span>Discovery Filters</span>
@@ -72,7 +72,7 @@ export function SettingsScreen({ onLogout }: SettingsScreenProps) {
 
         {/* Safety */}
         <div className="card mb-4">
-          <h3 className="text-label text-muted mb-3">Safety</h3>
+          <h3 className="text-label text-stone mb-3">Safety</h3>
           <div className="space-y-2">
             <button className="btn btn-ghost w-full justify-between">
               <span>Blocked Users</span>
@@ -91,7 +91,7 @@ export function SettingsScreen({ onLogout }: SettingsScreenProps) {
 
         {/* About */}
         <div className="card mb-4">
-          <h3 className="text-label text-muted mb-3">About</h3>
+          <h3 className="text-label text-stone mb-3">About</h3>
           <div className="space-y-2">
             <button className="btn btn-ghost w-full justify-between">
               <span>Terms of Service</span>
@@ -123,7 +123,7 @@ export function SettingsScreen({ onLogout }: SettingsScreenProps) {
         </button>
 
         {/* App Version */}
-        <p className="text-body text-muted text-center text-sm">
+        <p className="text-body text-stone text-center text-sm">
           Bae'd v1.0.0 · Made with 💜 in India
         </p>
       </div>

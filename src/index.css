@@ -793,43 +793,10 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DARK MODE
+   LIGHT THEME ONLY — No dark mode
    ═══════════════════════════════════════════════════════════════ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-cream: var(--color-dark-surface);
-    --color-ivory: var(--color-dark-card);
-    --color-ink: var(--color-dark-text);
-    --color-stone: var(--color-dark-muted);
-  }
-
-  body {
-    background-color: var(--color-dark-surface);
-    color: var(--color-dark-text);
-  }
-
-  .card,
-  .card-elevated,
-  .toast,
-  .bottom-nav {
-    background-color: var(--color-dark-card);
-  }
-
-  .input {
-    background-color: var(--color-dark-card);
-    color: var(--color-dark-text);
-  }
-
-  .btn-ghost {
-    border-color: var(--color-dark-muted);
-    color: var(--color-dark-text);
-  }
-
-  .btn-ghost:hover {
-    background-color: var(--color-dark-card);
-  }
-}
+/* Dark mode disabled — app is light-theme only */
 
 /* ═══════════════════════════════════════════════════════════════
    ACCESSIBILITY — REDUCED MOTION
