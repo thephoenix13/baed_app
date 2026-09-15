@@ -16,7 +16,7 @@ import { setupInstallPrompt } from '@/lib/pwa';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { OfflineBanner } from '@/components/pwa/OfflineBanner';
 import { ToastContainer } from '@/components/shared/ToastContainer';
-import { BottomNav } from '@/components/layout/BottomNav';
+import { BottomNavigation } from '@/components/layout/BottomNavigation';
 import { SplashScreen } from '@/app/screens/SplashScreen';
 import { WelcomeScreen } from '@/app/screens/WelcomeScreen';
 import { WhyVerifyScreen } from '@/app/screens/verification/WhyVerifyScreen';
@@ -77,7 +77,7 @@ type Screen =
   | 'admin-verification'
   | 'admin-moderation';
 
-type Tab = 'discover' | 'matches' | 'chat' | 'settings';
+type Tab = 'discover' | 'matches' | 'chat' | 'profile';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -112,9 +112,11 @@ export default function App() {
 
   const handleTabChange = useCallback((tab: Tab) => {
     setActiveTab(tab);
-    // Navigate to messages screen when chat tab is selected
+    // Navigate to appropriate screen based on tab
     if (tab === 'chat') {
       setScreen('messages');
+    } else if (tab === 'profile') {
+      setScreen('settings');
     } else {
       setScreen(tab);
     }
@@ -140,7 +142,7 @@ export default function App() {
   const userId = 'demo-user-001';
 
   // Show bottom nav for main app screens (except discover which has its own)
-  const showBottomNav = ['home', 'matches', 'messages', 'chat', 'settings'].includes(screen);
+  const showBottomNav = ['home', 'matches', 'messages', 'chat', 'settings', 'discover'].includes(screen);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -322,7 +324,7 @@ export default function App() {
 
         {/* Bottom Navigation */}
         {showBottomNav && (
-          <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+          <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
         )}
       </div>
     </QueryClientProvider>
