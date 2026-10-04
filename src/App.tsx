@@ -38,7 +38,6 @@ import { MessagesScreen } from '@/app/screens/chat/MessagesScreen';
 import { ChatScreen } from '@/app/screens/chat/ChatScreen';
 import { ProfileScreen } from '@/app/screens/profile/ProfileScreen';
 import { HomeScreen } from '@/app/screens/HomeScreen';
-import { WaitlistScreen } from '@/app/screens/WaitlistScreen';
 import { useAuthStore } from '@/stores/auth-store';
 import type { Match } from '@/modules/matching/types/matching.types';
 
@@ -56,7 +55,6 @@ const queryClient = new QueryClient({
 type Screen =
   | 'splash'
   | 'welcome'
-  | 'waitlist'
   | 'why-verify'
   | 'consent'
   | 'id-capture'
@@ -82,12 +80,7 @@ type Screen =
 type Tab = 'discover' | 'matches' | 'chat' | 'profile';
 
 export default function App() {
-  // Check if user wants to access the full app (internal use)
-  const isAppMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('app') === 'true';
-  
-  // Start on waitlist page for public sharing
-  // Change to 'splash' when app is ready for full launch
-  const [screen, setScreen] = useState<Screen>(isAppMode ? 'splash' : 'waitlist');
+  const [screen, setScreen] = useState<Screen>('splash');
   const [activeTab, setActiveTab] = useState<Tab>('discover');
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
@@ -165,14 +158,7 @@ export default function App() {
         )}
 
         {screen === 'welcome' && (
-          <WelcomeScreen 
-            onGetStarted={handleGetStarted}
-            onViewWaitlist={() => setScreen('waitlist')}
-          />
-        )}
-
-        {screen === 'waitlist' && (
-          <WaitlistScreen />
+          <WelcomeScreen onGetStarted={handleGetStarted} />
         )}
 
         {/* Verification Flow */}
