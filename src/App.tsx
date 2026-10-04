@@ -82,7 +82,12 @@ type Screen =
 type Tab = 'discover' | 'matches' | 'chat' | 'profile';
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('splash');
+  // Check if user wants to access the full app (internal use)
+  const isAppMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('app') === 'true';
+  
+  // Start on waitlist page for public sharing
+  // Change to 'splash' when app is ready for full launch
+  const [screen, setScreen] = useState<Screen>(isAppMode ? 'splash' : 'waitlist');
   const [activeTab, setActiveTab] = useState<Tab>('discover');
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
