@@ -1,8 +1,9 @@
 interface WelcomeScreenProps {
   onGetStarted: () => void;
+  onViewWaitlist?: () => void;
 }
 
-export function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
+export function WelcomeScreen({ onGetStarted, onViewWaitlist }: WelcomeScreenProps) {
   return (
     <div className="page flex flex-col" style={{ paddingBottom: 0 }}>
       {/* Spacer to center content */}
@@ -75,6 +76,14 @@ export function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
         <button onClick={onGetStarted} className="btn btn-primary">
           Get Started
         </button>
+        {onViewWaitlist && (
+          <button
+            onClick={onViewWaitlist}
+            className="btn btn-ghost mt-3"
+          >
+            Join Waitlist
+          </button>
+        )}
         <p className="text-small text-center mt-4">
           By continuing you agree to our Terms & Privacy Policy
         </p>
