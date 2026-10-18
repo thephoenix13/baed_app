@@ -55,7 +55,7 @@ export function ProfilePhotosScreen() {
   return (
     <>
       <Screen footer>
-        <StepHeader step={2} total={5} to="/profile/create" />
+        <StepHeader step={5} total={8} to="/profile/location" />
         <Kicker>Your photos</Kicker>
         <h1 className="bd-title" style={{ margin: '10px 0 8px' }}>
           Show them you.

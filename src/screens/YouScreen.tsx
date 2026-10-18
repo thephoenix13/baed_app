@@ -42,9 +42,11 @@ export function YouScreen() {
         <Row title="Report a problem" onClick={() => navigate('/settings/report')} />
         <Row title="Delete account" trailing={<Icon name="trash" size={18} />} onClick={() => navigate('/settings/delete')} />
       </Section>
+      <Section title="Safety">
+        <Row title="Plan a Safe Date" sub="Let someone you trust know where you'll be" onClick={() => navigate('/safe-date')} />
+      </Section>
       <Section title="Team tools">
-        <Row title="Verification queue" onClick={() => navigate('/admin/verification')} />
-        <Row title="Photo moderation" onClick={() => navigate('/admin/moderation')} />
+        <Row title="Team console" onClick={() => navigate('/admin')} />
       </Section>
 
       <div style={{ marginTop: 26 }}>

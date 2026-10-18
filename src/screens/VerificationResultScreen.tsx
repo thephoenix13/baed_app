@@ -84,7 +84,7 @@ export function VerificationResultScreen() {
       </Screen>
       <Footer>
         <Button onClick={() => navigate('/verify/id')}>Try again</Button>
-        <Button variant="ghost" onClick={() => navigate('/verify/why')}>
+        <Button variant="ghost" onClick={() => navigate('/verify/review')}>
           Ask for a manual review
         </Button>
       </Footer>

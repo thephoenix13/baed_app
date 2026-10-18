@@ -152,6 +152,7 @@ export function ChatScreen() {
         <p className="bd-small bd-muted" style={{ margin: '6px 0 8px' }}>
           They won't be told. Blocking ends the chat and hides you from each other.
         </p>
+        <Row title="Plan a Safe Date" sub="Share your date with someone you trust" onClick={() => navigate('/safe-date')} />
         {REPORT_REASONS.map((reason) => (
           <Row
             key={reason}

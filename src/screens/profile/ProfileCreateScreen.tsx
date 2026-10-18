@@ -14,7 +14,7 @@ export function ProfileCreateScreen() {
   return (
     <>
       <Screen footer>
-        <StepHeader step={1} total={5} to="/verify/result" />
+        <StepHeader step={1} total={8} to="/verify/result" />
         <Kicker>Your profile</Kicker>
         <h1 className="bd-title" style={{ margin: '10px 0 8px' }}>
           Let's get to know you.
@@ -64,7 +64,7 @@ export function ProfileCreateScreen() {
         </div>
       </Screen>
       <Footer>
-        <Button disabled={!valid} onClick={() => navigate('/profile/photos')}>
+        <Button disabled={!valid} onClick={() => navigate('/profile/preference')}>
           Continue
         </Button>
       </Footer>

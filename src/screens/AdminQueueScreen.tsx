@@ -40,7 +40,7 @@ export function AdminQueueScreen({ kicker, title, approve, reject, items }: Admi
   return (
     <Screen wash={false}>
       <div className="bd-topbar">
-        <BackButton to="/you" />
+        <BackButton to="/admin" />
       </div>
       <Kicker>{kicker}</Kicker>
       <h1 className="bd-title" style={{ margin: '10px 0 4px' }}>

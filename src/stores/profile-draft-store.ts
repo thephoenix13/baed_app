@@ -9,7 +9,9 @@ interface ProfileDraft {
   name: string;
   age: string;
   gender: string;
+  showMe: string[];
   city: string;
+  nearby: boolean;
   photos: number;
   bio: string;
   occupation: string;
@@ -23,7 +25,9 @@ const empty = {
   name: '',
   age: '',
   gender: '',
+  showMe: [] as string[],
   city: '',
+  nearby: false,
   photos: 0,
   bio: '',
   occupation: '',

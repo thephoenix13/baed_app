@@ -35,8 +35,8 @@ export function WelcomeScreen() {
         </div>
       </Screen>
       <Footer>
-        <Button onClick={() => navigate('/verify/why')}>Get started</Button>
-        <Button variant="ghost" onClick={() => navigate('/discover')}>
+        <Button onClick={() => navigate('/signin')}>Get started</Button>
+        <Button variant="ghost" onClick={() => navigate('/signin')}>
           I already have an account
         </Button>
       </Footer>

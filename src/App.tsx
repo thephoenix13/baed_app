@@ -22,6 +22,12 @@ import { IdCaptureScreen } from '@/screens/verification/IdCaptureScreen';
 import { SelfieScreen } from '@/screens/verification/SelfieScreen';
 import { ProcessingScreen } from '@/screens/verification/ProcessingScreen';
 import { VerificationResultScreen } from '@/screens/VerificationResultScreen';
+import { SignInScreen } from '@/screens/SignInScreen';
+import { OtpScreen } from '@/screens/OtpScreen';
+import { ManualReviewScreen } from '@/screens/verification/ManualReviewScreen';
+import { PreferenceScreen, IntentScreen, LocationScreen } from '@/screens/profile/OnboardingScreens';
+import { SafeDateScreen } from '@/screens/SafeDateScreen';
+import { AdminDashboardScreen, AdminUsersScreen, AdminReportsScreen, AdminRiskScreen } from '@/screens/admin/AdminScreens';
 import { ProfileCreateScreen } from '@/screens/profile/ProfileCreateScreen';
 import { ProfilePhotosScreen } from '@/screens/profile/ProfilePhotosScreen';
 import { ProfileBioScreen } from '@/screens/profile/ProfileBioScreen';
@@ -65,6 +71,8 @@ function Shell() {
       <Routes>
         <Route path="/" element={<SplashScreen />} />
         <Route path="/welcome" element={<WelcomeScreen />} />
+        <Route path="/signin" element={<SignInScreen />} />
+        <Route path="/signin/otp" element={<OtpScreen />} />
 
         {/* Verification */}
         <Route path="/verify/why" element={<WhyVerifyScreen />} />
@@ -73,9 +81,13 @@ function Shell() {
         <Route path="/verify/selfie" element={<SelfieScreen />} />
         <Route path="/verify/processing" element={<ProcessingScreen />} />
         <Route path="/verify/result" element={<VerificationResultScreen />} />
+        <Route path="/verify/review" element={<ManualReviewScreen />} />
 
         {/* Profile creation */}
         <Route path="/profile/create" element={<ProfileCreateScreen />} />
+        <Route path="/profile/preference" element={<PreferenceScreen />} />
+        <Route path="/profile/intent" element={<IntentScreen />} />
+        <Route path="/profile/location" element={<LocationScreen />} />
         <Route path="/profile/photos" element={<ProfilePhotosScreen />} />
         <Route path="/profile/bio" element={<ProfileBioScreen />} />
         <Route path="/profile/interests" element={<ProfileInterestsScreen />} />
@@ -90,8 +102,13 @@ function Shell() {
         <Route path="/chat/:matchId" element={<ChatScreen />} />
         <Route path="/you" element={<YouScreen />} />
         <Route path="/settings/:topic" element={<SettingsTopicScreen />} />
+        <Route path="/safe-date" element={<SafeDateScreen />} />
 
         {/* Team tools */}
+        <Route path="/admin" element={<AdminDashboardScreen />} />
+        <Route path="/admin/users" element={<AdminUsersScreen />} />
+        <Route path="/admin/reports" element={<AdminReportsScreen />} />
+        <Route path="/admin/risk" element={<AdminRiskScreen />} />
         <Route path="/admin/verification" element={<AdminVerificationScreen />} />
         <Route path="/admin/moderation" element={<AdminModerationScreen />} />
 

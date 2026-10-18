@@ -1,18 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { useProfileDraft } from '@/stores/profile-draft-store';
-import { Button, Footer, Kicker, Pill, Screen, StepHeader } from '@/ui/kit';
+import { Button, Footer, Kicker, Screen, StepHeader } from '@/ui/kit';
 
-const INTENTS = ['Long-term', 'Short-term', 'Marriage', 'Friendship', 'Not sure yet'];
 const MAX = 500;
 
 export function ProfileBioScreen() {
   const navigate = useNavigate();
-  const { bio, occupation, intent, set } = useProfileDraft();
+  const { bio, occupation, set } = useProfileDraft();
 
   return (
     <>
       <Screen footer>
-        <StepHeader step={3} total={5} to="/profile/photos" />
+        <StepHeader step={6} total={8} to="/profile/photos" />
         <Kicker>About you</Kicker>
         <h1 className="bd-title" style={{ margin: '10px 0 8px' }}>
           Say a little about you.
@@ -41,20 +40,10 @@ export function ProfileBioScreen() {
             <label htmlFor="pb-job">What you do</label>
             <input id="pb-job" className="bd-input" value={occupation} onChange={(e) => set({ occupation: e.target.value })} placeholder="Product designer" />
           </div>
-          <div className="bd-field">
-            <label>Looking for</label>
-            <div className="bd-chips">
-              {INTENTS.map((i) => (
-                <Pill key={i} selected={intent === i} onClick={() => set({ intent: i })}>
-                  {i}
-                </Pill>
-              ))}
-            </div>
-          </div>
         </div>
       </Screen>
       <Footer>
-        <Button disabled={!intent} onClick={() => navigate('/profile/interests')}>
+        <Button onClick={() => navigate('/profile/interests')}>
           Continue
         </Button>
       </Footer>

@@ -11,7 +11,7 @@ export function ProfilePreviewScreen() {
   return (
     <>
       <Screen footer>
-        <StepHeader step={5} total={5} to="/profile/interests" />
+        <StepHeader step={8} total={8} to="/profile/interests" />
         <Kicker>Preview</Kicker>
         <h1 className="bd-title" style={{ margin: '10px 0 8px' }}>
           This is how people see you.

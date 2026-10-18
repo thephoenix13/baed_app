@@ -23,7 +23,7 @@ export function ProfileInterestsScreen() {
   return (
     <>
       <Screen footer>
-        <StepHeader step={4} total={5} to="/profile/bio" />
+        <StepHeader step={7} total={8} to="/profile/bio" />
         <Kicker>Interests</Kicker>
         <h1 className="bd-title" style={{ margin: '10px 0 8px' }}>
           What are you into?
