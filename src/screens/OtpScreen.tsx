@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useEnterApp } from '@/hooks/use-auth';
+import { api } from '@/lib/api';
 import { BackButton, Button, Footer, Kicker, Screen } from '@/ui/kit';
 
 const RESEND_SECONDS = 30;
@@ -14,6 +15,8 @@ export function OtpScreen() {
   const [code, setCode] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [wrong, setWrong] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [seconds, setSeconds] = useState(RESEND_SECONDS);
 
   useEffect(() => {
@@ -28,18 +31,26 @@ export function OtpScreen() {
 
   const locked = attempts >= MAX_ATTEMPTS;
 
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (code.length !== 6 || locked) return;
-    // Demo check until the SMS provider exists: any code works except 000000.
-    if (code === '000000') {
-      setAttempts((a) => a + 1);
-      setWrong(true);
-      setCode('');
-      return;
+    if (code.length !== 6 || locked || checking) return;
+    setChecking(true);
+    setFailed(false);
+    try {
+      const ok = await api.verifyOtp(state.phone!, code);
+      if (!ok) {
+        setAttempts((a) => a + 1);
+        setWrong(true);
+        setCode('');
+        setChecking(false);
+        return;
+      }
+      enterApp();
+      navigate('/verify/why', { replace: true });
+    } catch {
+      setFailed(true);
+      setChecking(false);
     }
-    enterApp();
-    navigate('/verify/why', { replace: true });
   };
 
   const resend = () => {
@@ -86,6 +97,11 @@ export function OtpScreen() {
               That code isn't right. {MAX_ATTEMPTS - attempts} {MAX_ATTEMPTS - attempts === 1 ? 'try' : 'tries'} left.
             </span>
           )}
+          {failed && (
+            <span className="bd-small" role="alert" style={{ color: 'var(--bd-error)' }}>
+              We couldn't check that code. Check your connection and try again.
+            </span>
+          )}
           {locked && (
             <span className="bd-small" role="alert" style={{ color: 'var(--bd-error)' }}>
               Too many wrong codes. Try again in 15 minutes.
@@ -104,7 +120,7 @@ export function OtpScreen() {
         </div>
       </Screen>
       <Footer>
-        <Button type="submit" disabled={code.length !== 6 || locked}>
+        <Button type="submit" disabled={code.length !== 6 || locked} loading={checking}>
           Verify and continue
         </Button>
       </Footer>

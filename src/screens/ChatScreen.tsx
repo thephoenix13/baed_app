@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getMatch, getMatchPartner } from '@/modules/matching/services/matching.service';
+import { getMatchPartner } from '@/modules/matching/services/matching.service';
+import { useMatch } from '@/lib/queries';
+import { ErrorPanel, Skeleton } from '@/ui/states';
 import { DEMO_USER_ID } from '@/lib/session';
 import { useUIStore } from '@/stores/ui-store';
 import { Icon } from '@/ui/Icon';
@@ -22,7 +24,7 @@ export function ChatScreen() {
   const { matchId = '' } = useParams();
   const navigate = useNavigate();
   const addToast = useUIStore((s) => s.addToast);
-  const match = getMatch(matchId);
+  const { data: match, isPending, error, refetch } = useMatch(matchId);
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -41,18 +43,22 @@ export function ChatScreen() {
 
   const risky = useMemo(() => messages.some((m) => RISKY.test(m.text)), [messages]);
 
-  if (!match) {
+  if (isPending || error || !match) {
     return (
       <main className="bd-screen">
         <BackButton to="/chats" />
-        <div className="bd-center" style={{ textAlign: 'center' }}>
-          <h1 className="bd-title">Conversation not found</h1>
-          <div style={{ marginTop: 20 }}>
-            <Button auto onClick={() => navigate('/chats')}>
-              Back to chats
-            </Button>
+        {isPending ? (
+          <div role="status" aria-label="Loading chat" style={{ marginTop: 24 }}>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+              <Skeleton w={44} h={44} r={22} />
+              <Skeleton w={140} h={16} />
+            </div>
+            <Skeleton w="60%" h={44} r={18} style={{ marginTop: 40 }} />
+            <Skeleton w="45%" h={44} r={18} style={{ marginTop: 14, marginLeft: 'auto' }} />
           </div>
-        </div>
+        ) : (
+          <ErrorPanel error={error} what="this chat" onRetry={() => refetch()} />
+        )}
       </main>
     );
   }

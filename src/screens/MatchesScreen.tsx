@@ -1,14 +1,15 @@
-import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getMatch, getMatchPartner, getUserMatches } from '@/modules/matching/services/matching.service';
+import { getMatch, getMatchPartner } from '@/modules/matching/services/matching.service';
 import { DEMO_USER_ID } from '@/lib/session';
+import { useMatches } from '@/lib/queries';
 import { Icon } from '@/ui/Icon';
+import { ErrorPanel, ListSkeleton } from '@/ui/states';
 import { Avatar, Button, Dots, Kicker, Screen, VerifiedBadge } from '@/ui/kit';
 
 export function MatchesScreen() {
   const navigate = useNavigate();
   const { state } = useLocation() as { state: { newMatchId?: string } | null };
-  const matches = useMemo(() => getUserMatches(DEMO_USER_ID), []);
+  const { data: matches = [], isPending, error, refetch } = useMatches(DEMO_USER_ID);
   const fresh = state?.newMatchId ? getMatch(state.newMatchId) : null;
 
   if (fresh) {
@@ -21,9 +22,9 @@ export function MatchesScreen() {
             You and {partner.displayName}.
           </h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 0, marginBottom: 14 }}>
-            <Avatar seed="you" size="lg" ring />
+            <Avatar seed="you" size="lg" ring label="You" />
             <div style={{ marginLeft: -10 }}>
-              <Avatar seed={partner.id} size="lg" ring />
+              <Avatar seed={partner.id} size="lg" ring label={partner.displayName} />
             </div>
           </div>
           <VerifiedBadge />
@@ -47,10 +48,16 @@ export function MatchesScreen() {
         Matches
       </h1>
       <p className="bd-small bd-muted" style={{ margin: '4px 0 0' }}>
-        {matches.length === 0 ? 'No matches yet' : `${matches.length} ${matches.length === 1 ? 'match' : 'matches'}`}
+        {isPending ? 'Loading' : error ? 'Could not load' : matches.length === 0 ? 'No matches yet' : `${matches.length} ${matches.length === 1 ? 'match' : 'matches'}`}
       </p>
 
-      {matches.length === 0 ? (
+      {isPending ? (
+        <div style={{ marginTop: 22 }}>
+          <ListSkeleton />
+        </div>
+      ) : error ? (
+        <ErrorPanel error={error} what="your matches" onRetry={() => refetch()} />
+      ) : matches.length === 0 ? (
         <div className="bd-hero pale" style={{ marginTop: 40, padding: '28px 22px' }}>
           <div className="bd-kicker">Nothing yet</div>
           <div className="bd-serif" style={{ fontSize: 28, lineHeight: 1.05, margin: '10px 0 8px' }}>
@@ -75,7 +82,7 @@ export function MatchesScreen() {
                   onClick={() => navigate(`/chat/${m.id}`)}
                   style={{ all: 'unset', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600 }}
                 >
-                  <Avatar seed={p.id} size="lg" ring />
+                  <Avatar seed={p.id} size="lg" ring label={p.displayName} />
                   {p.displayName}
                 </button>
               );
@@ -93,7 +100,7 @@ export function MatchesScreen() {
                 style={{ gap: 14, alignItems: 'center', justifyContent: 'flex-start' }}
                 onClick={() => navigate(`/chat/${m.id}`)}
               >
-                <Avatar seed={p.id} />
+                <Avatar seed={p.id} label={p.displayName} />
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     {p.displayName}

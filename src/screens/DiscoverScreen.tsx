@@ -1,29 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDiscoveryFeed, resetSeenProfiles } from '@/modules/discovery/services/discovery.service';
+import { resetSeenProfiles } from '@/modules/discovery/services/discovery.service';
 import { likeProfile, passProfile } from '@/modules/matching/services/matching.service';
-import type { CandidateProfile } from '@/modules/discovery/types/discovery.types';
 import { DEMO_USER_ID } from '@/lib/session';
+import { profilePhotos } from '@/lib/photos';
+import { useFeed } from '@/lib/queries';
 import { useFilters } from '@/stores/filters-store';
+import { useProfileDraft } from '@/stores/profile-draft-store';
 import { Icon } from '@/ui/Icon';
-import { Button, RoundButton, Screen, VerifiedBadge, variantFor } from '@/ui/kit';
+import { CardSkeleton, ErrorPanel } from '@/ui/states';
+import { Button, PortraitPhoto, RoundButton, Screen, VerifiedBadge } from '@/ui/kit';
 
 export function DiscoverScreen() {
   const navigate = useNavigate();
-  const [profiles, setProfiles] = useState<CandidateProfile[]>([]);
-  const [index, setIndex] = useState(0);
   const filters = useFilters((s) => s.filters);
+  const { intent, interests, city } = useProfileDraft();
+  const viewer = useMemo(() => ({ intent, interests, city }), [intent, interests, city]);
+  const { data, isPending, error, refetch } = useFeed(DEMO_USER_ID, filters, viewer);
+  const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState<'left' | 'right' | null>(null);
 
-  const load = () => {
-    setProfiles(getDiscoveryFeed(DEMO_USER_ID, filters).profiles);
-    setIndex(0);
-  };
-  useEffect(() => {
-    load();
-  }, []);
-
+  const profiles = data?.profiles ?? [];
   const current = profiles[index];
+
+  useEffect(() => {
+    setIndex(0);
+  }, [data]);
 
   const decide = (direction: 'left' | 'right') => {
     if (!current || leaving) return;
@@ -43,6 +45,8 @@ export function DiscoverScreen() {
     }, 220);
   };
 
+  const shared = current ? current.interests.filter((i) => interests.includes(i)) : [];
+
   return (
     <Screen nav>
       <div className="bd-topbar">
@@ -52,7 +56,11 @@ export function DiscoverScreen() {
         <RoundButton icon="sliders" label="Filters" variant="sm" onClick={() => navigate('/filters')} />
       </div>
 
-      {current ? (
+      {isPending ? (
+        <CardSkeleton />
+      ) : error ? (
+        <ErrorPanel error={error} what="people near you" onRetry={() => refetch()} />
+      ) : current ? (
         <>
           <button
             type="button"
@@ -60,8 +68,12 @@ export function DiscoverScreen() {
             onClick={() => navigate(`/profile/${current.id}`)}
             aria-label={`Open ${current.displayName}'s profile`}
           >
-            <div
-              className={`bd-portrait bd-photo ${variantFor(current.id)}`}
+            <PortraitPhoto
+              id={current.id}
+              src={profilePhotos(current.id)[0]}
+              eager
+              label={`${current.displayName}, ${current.age}`}
+              className="bd-photo"
               style={{
                 height: 'min(480px, calc(100dvh - 300px))',
                 minHeight: 340,
@@ -76,18 +88,22 @@ export function DiscoverScreen() {
                 <div className="bd-serif" style={{ fontSize: 34, lineHeight: 1 }}>
                   {current.displayName}, {current.age}
                 </div>
-                <div style={{ fontSize: 14, opacity: 0.92, margin: '8px 0 10px', display: 'flex', gap: 6, alignItems: 'center' }}>
+                <div style={{ fontSize: 14, opacity: 0.95, margin: '8px 0 10px', display: 'flex', gap: 6, alignItems: 'center' }}>
                   <Icon name="pin" size={15} />
                   {current.distance} km away{current.occupation ? ` · ${current.occupation}` : ''}
                 </div>
-                <span
-                  className="bd-pill static"
-                  style={{ background: 'rgba(255,255,255,.2)', borderColor: 'rgba(255,255,255,.4)', color: '#fff' }}
-                >
-                  {current.intent}
-                </span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  <span className="bd-pill static" style={{ background: 'rgba(255,255,255,.2)', borderColor: 'rgba(255,255,255,.4)', color: '#fff' }}>
+                    {current.intent}
+                  </span>
+                  {shared.length > 0 && (
+                    <span className="bd-pill static" style={{ background: 'rgba(255,255,255,.2)', borderColor: 'rgba(255,255,255,.4)', color: '#fff' }}>
+                      {shared.length} in common
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
+            </PortraitPhoto>
           </button>
 
           <div className="bd-actions" style={{ marginTop: 18 }}>
@@ -116,7 +132,7 @@ export function DiscoverScreen() {
               style={{ color: '#fff', borderColor: 'rgba(255,255,255,.35)' }}
               onClick={() => {
                 resetSeenProfiles();
-                load();
+                refetch();
               }}
             >
               Start over

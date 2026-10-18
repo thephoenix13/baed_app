@@ -1,13 +1,14 @@
-import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMatchPartner, getUserMatches } from '@/modules/matching/services/matching.service';
+import { getMatchPartner } from '@/modules/matching/services/matching.service';
 import { DEMO_USER_ID } from '@/lib/session';
+import { useMatches } from '@/lib/queries';
 import { Icon } from '@/ui/Icon';
+import { ErrorPanel, ListSkeleton } from '@/ui/states';
 import { Avatar, Button, Screen } from '@/ui/kit';
 
 export function ChatsScreen() {
   const navigate = useNavigate();
-  const matches = useMemo(() => getUserMatches(DEMO_USER_ID), []);
+  const { data: matches = [], isPending, error, refetch } = useMatches(DEMO_USER_ID);
 
   return (
     <Screen tint="var(--bd-rose-white)" nav>
@@ -15,7 +16,13 @@ export function ChatsScreen() {
         Chats
       </h1>
 
-      {matches.length === 0 ? (
+      {isPending ? (
+        <div style={{ marginTop: 16 }}>
+          <ListSkeleton />
+        </div>
+      ) : error ? (
+        <ErrorPanel error={error} what="your chats" onRetry={() => refetch()} />
+      ) : matches.length === 0 ? (
         <div className="bd-hero pale" style={{ marginTop: 40, padding: '28px 22px' }}>
           <div className="bd-kicker">No chats yet</div>
           <div className="bd-serif" style={{ fontSize: 28, lineHeight: 1.05, margin: '10px 0 8px' }}>
@@ -40,7 +47,7 @@ export function ChatsScreen() {
                 style={{ gap: 14, justifyContent: 'flex-start' }}
                 onClick={() => navigate(`/chat/${m.id}`)}
               >
-                <Avatar seed={p.id} />
+                <Avatar seed={p.id} label={p.displayName} />
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     {p.displayName}

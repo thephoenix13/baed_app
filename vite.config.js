@@ -15,7 +15,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["icons/*.png"],
+      includeAssets: ["icons/*.png", "icons/icon.svg", "photos/*.jpg"],
       manifest: {
         name: "Bae'd — Dating, without the doubt",
         short_name: "Bae'd",
@@ -24,8 +24,15 @@ export default defineConfig({
         background_color: "#FDF7F0",
         display: "standalone",
         orientation: "portrait",
+        id: "/",
+        lang: "en",
+        categories: ["social", "lifestyle"],
         scope: "/",
-        start_url: "/",
+        start_url: "/discover",
+        shortcuts: [
+          { name: "Discover", url: "/discover", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+          { name: "Chats", url: "/chats", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+        ],
         icons: [
           {
             src: "/icons/icon-192.png",
@@ -63,6 +70,15 @@ export default defineConfig({
             },
           },
           {
+            urlPattern: /\/photos\/.*\.jpg$/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "profile-photos-cache",
+              expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [200] },
+            },
+          },
+          {
             urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
             handler: "CacheFirst",
             options: {
@@ -77,8 +93,11 @@ export default defineConfig({
             },
           },
         ],
-        // Never cache PII, chat, or identity data
-        navigateFallback: null,
+        // Static assets only. Nothing personal, no chats and no identity data is ever cached.
+        // Offline, any page falls back to the app shell, which shows its own offline banner.
+        navigateFallback: "index.html",
+        navigateFallbackDenylist: [/^\/api\//],
+        cleanupOutdatedCaches: true,
       },
     }),
   ],

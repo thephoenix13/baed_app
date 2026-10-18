@@ -1,12 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { useProfileDraft } from '@/stores/profile-draft-store';
+import { useFilters } from '@/stores/filters-store';
+import { getDefaultFilters } from '@/modules/discovery/services/discovery.service';
 import { useUIStore } from '@/stores/ui-store';
 import { Button, Dots, Footer, Item, Kicker, Pill, Screen, Section, StepHeader, VerifiedBadge } from '@/ui/kit';
 
 export function ProfilePreviewScreen() {
   const navigate = useNavigate();
   const addToast = useUIStore((s) => s.addToast);
-  const { name, age, city, occupation, bio, intent, interests } = useProfileDraft();
+  const { name, age, city, occupation, bio, intent, interests, showMe } = useProfileDraft();
+  const setFilters = useFilters((s) => s.setFilters);
 
   return (
     <>
@@ -50,6 +53,15 @@ export function ProfilePreviewScreen() {
       <Footer>
         <Button
           onClick={() => {
+            // Start Discover with the people they said they want to meet
+            if (showMe.length > 0) {
+              setFilters({
+                ...getDefaultFilters(),
+                interestedInWomen: showMe.includes('Women'),
+                interestedInMen: showMe.includes('Men'),
+                interestedInNonBinary: showMe.includes('Non-binary people'),
+              });
+            }
             addToast({ type: 'success', title: 'Your profile is live', message: 'Photos are checked within a few minutes.' });
             navigate('/discover');
           }}

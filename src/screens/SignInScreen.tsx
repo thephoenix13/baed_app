@@ -1,16 +1,28 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '@/lib/api';
 import { BackButton, Button, Footer, Kicker, Screen } from '@/ui/kit';
 
 export function SignInScreen() {
   const navigate = useNavigate();
   const [phone, setPhone] = useState('');
   const valid = /^[6-9]\d{9}$/.test(phone);
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
 
-  const submit = (e: FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (valid) navigate('/signin/otp', { state: { phone } });
+    if (!valid || sending) return;
+    setSending(true);
+    setFailed(false);
+    try {
+      await api.sendOtp(phone);
+      navigate('/signin/otp', { state: { phone } });
+    } catch {
+      setFailed(true);
+      setSending(false);
+    }
   };
 
   return (
@@ -58,8 +70,13 @@ export function SignInScreen() {
         </p>
       </Screen>
       <Footer>
-        <Button type="submit" disabled={!valid}>
-          Send code
+        {failed && (
+          <p className="bd-small" role="alert" style={{ margin: 0, color: 'var(--bd-error)', textAlign: 'center' }}>
+            We couldn't send the code. Check your connection and try again.
+          </p>
+        )}
+        <Button type="submit" disabled={!valid} loading={sending}>
+          {failed ? 'Try again' : 'Send code'}
         </Button>
       </Footer>
     </form>

@@ -1,5 +1,6 @@
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { avatarPhoto } from '@/lib/photos';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Icon } from './Icon';
 import type { IconName } from './Icon';
@@ -34,10 +35,22 @@ export function Footer({ children }: { children: ReactNode }) {
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'pink' | 'ghost' | 'danger';
   auto?: boolean;
+  loading?: boolean;
 }
 
-export function Button({ variant = 'primary', auto, className = '', type = 'button', ...rest }: ButtonProps) {
-  return <button type={type} className={`bd-btn ${variant}${auto ? ' auto' : ''} ${className}`} {...rest} />;
+export function Button({ variant = 'primary', auto, loading, className = '', type = 'button', children, disabled, ...rest }: ButtonProps) {
+  return (
+    <button
+      type={type}
+      className={`bd-btn ${variant}${auto ? ' auto' : ''} ${className}`}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      {...rest}
+    >
+      {loading && <span className="bd-spin" aria-hidden="true" />}
+      {children}
+    </button>
+  );
 }
 
 export function BackButton({ to, label = 'Back' }: { to?: string; label?: string }) {
@@ -107,13 +120,55 @@ export function variantFor(key: string) {
   return VARIANTS[h % VARIANTS.length];
 }
 
-export function Avatar({ seed, size, ring }: { seed: string; size?: 'lg'; ring?: boolean }) {
+export function Avatar({ seed, size, ring, label = 'Profile photo' }: { seed: string; size?: 'lg'; ring?: boolean; label?: string }) {
+  const src = avatarPhoto(seed);
+  const [failed, setFailed] = useState(false);
   return (
     <div
       className={`bd-portrait bd-avatar ${variantFor(seed)}${size ? ` ${size}` : ''}${ring ? ' ring' : ''}`}
       role="img"
-      aria-label="Profile photo"
-    />
+      aria-label={label}
+    >
+      {src && !failed && <img className="bd-photo-img" src={src} alt="" loading="lazy" decoding="async" onError={() => setFailed(true)} />}
+    </div>
+  );
+}
+
+/** A large person photo with the illustrated portrait showing while it loads or if it fails. */
+export function PortraitPhoto({
+  id,
+  src,
+  label,
+  className = '',
+  style,
+  eager,
+  children,
+}: {
+  id: string;
+  src?: string;
+  label: string;
+  className?: string;
+  style?: CSSProperties;
+  eager?: boolean;
+  children?: ReactNode;
+}) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div className={`bd-portrait ${variantFor(id)} ${className}`} style={style} role="img" aria-label={label}>
+      {src && !failed && (
+        <img
+          className="bd-photo-img"
+          src={src}
+          alt=""
+          width={720}
+          height={900}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          onError={() => setFailed(true)}
+        />
+      )}
+      {children}
+    </div>
   );
 }
 

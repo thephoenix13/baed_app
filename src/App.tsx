@@ -6,13 +6,14 @@
  */
 
 import { useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { setupInstallPrompt } from '@/lib/pwa';
 import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { OfflineBanner } from '@/components/pwa/OfflineBanner';
 import { ToastContainer } from '@/components/shared/ToastContainer';
 import { FloatingNav } from '@/ui/kit';
+import { AppErrorBoundary, NotFoundScreen } from '@/ui/states';
 
 import { SplashScreen } from '@/screens/SplashScreen';
 import { WelcomeScreen } from '@/screens/WelcomeScreen';
@@ -150,7 +151,7 @@ function Shell() {
         <Route path="/admin/verification" element={<AdminVerificationScreen />} />
         <Route path="/admin/moderation" element={<AdminModerationScreen />} />
 
-        <Route path="*" element={<Navigate to="/welcome" replace />} />
+        <Route path="*" element={<NotFoundScreen />} />
       </Routes>
       {showNav && <FloatingNav />}
     </div>
@@ -165,9 +166,11 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Shell />
-      </BrowserRouter>
+      <AppErrorBoundary>
+        <BrowserRouter>
+          <Shell />
+        </BrowserRouter>
+      </AppErrorBoundary>
     </QueryClientProvider>
   );
 }
