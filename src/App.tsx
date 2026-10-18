@@ -49,11 +49,49 @@ const queryClient = new QueryClient({
 
 const NAV_ROUTES = ['/discover', '/matches', '/chats', '/you'];
 
-/** Reset scroll on every route change so each screen starts at its hero. */
-function ScrollToTop() {
+const TITLES: Record<string, string> = {
+  '/welcome': 'Welcome',
+  '/signin': 'Sign in',
+  '/signin/otp': 'Enter your code',
+  '/verify/why': 'Why we verify',
+  '/verify/consent': 'Your data',
+  '/verify/id': 'Photograph your ID',
+  '/verify/selfie': 'Take a selfie',
+  '/verify/processing': "Checking it's you",
+  '/verify/result': 'Verification result',
+  '/verify/review': 'In review',
+  '/profile/create': 'Your profile',
+  '/profile/preference': 'Who to meet',
+  '/profile/intent': 'What you want',
+  '/profile/location': 'Your location',
+  '/profile/photos': 'Your photos',
+  '/profile/bio': 'About you',
+  '/profile/interests': 'Your interests',
+  '/profile/preview': 'Profile preview',
+  '/discover': 'Discover',
+  '/filters': 'Filters',
+  '/matches': 'Matches',
+  '/chats': 'Chats',
+  '/you': 'You',
+  '/safe-date': 'Safe Date',
+  '/admin': 'Team console',
+  '/admin/users': 'Find a user',
+  '/admin/verification': 'Verification queue',
+  '/admin/moderation': 'Photo moderation',
+  '/admin/reports': 'Reports',
+  '/admin/risk': 'Risk cases',
+};
+
+/**
+ * On every route change: scroll to the top and set the page title, so each screen starts at its
+ * hero and screen readers announce where the person is.
+ */
+function RouteEffects() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
+    const name = TITLES[pathname] ?? (pathname.startsWith('/chat/') ? 'Chat' : pathname.startsWith('/profile/') ? 'Profile' : pathname.startsWith('/settings/') ? 'Settings' : '');
+    document.title = name ? `${name} · Bae'd` : "Bae'd — Dating, without the doubt";
   }, [pathname]);
   return null;
 }
@@ -64,7 +102,7 @@ function Shell() {
 
   return (
     <div className="bd-app">
-      <ScrollToTop />
+      <RouteEffects />
       <OfflineBanner />
       <InstallPrompt />
       <ToastContainer />

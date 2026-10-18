@@ -21,12 +21,13 @@
   --bd-error: #B83D55;
   --bd-amber: #B87924;
   --bd-ink: #180D24;
-  --bd-muted: #756B73;
+  --bd-muted: #6A6068; /* darkened from #756B73 so small text passes 4.5:1 on cream and the tints */
   --bd-line: rgba(27, 11, 44, 0.12);
   --bd-dotted: rgba(27, 11, 44, 0.22);
 
-  --bd-font-display: 'DM Serif Display', Georgia, serif;
-  --bd-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Devanagari fallbacks so Hindi and Marathi render in a matching weight, not a random system font */
+  --bd-font-display: 'DM Serif Display', 'Noto Serif Devanagari', Georgia, serif;
+  --bd-font-body: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   --bd-shadow-card: 0 14px 40px rgba(27, 11, 44, 0.07);
   --bd-shadow-hero: 0 14px 30px rgba(27, 11, 44, 0.22);
@@ -44,6 +45,12 @@ body.bd-body {
   color: var(--bd-ink);
   font-family: var(--bd-font-body);
 }
+
+/* Keyboard focus: a cream gap then a plum ring, visible on light and on plum surfaces */
+button:focus-visible, a:focus-visible, [role="radio"]:focus-visible, summary:focus-visible {
+  outline: none; box-shadow: 0 0 0 2px var(--bd-cream), 0 0 0 4px var(--bd-plum);
+}
+input[type="checkbox"]:focus-visible { outline: 2px solid var(--bd-plum); outline-offset: 3px; }
 
 /* ─── Shell ─── a phone-width column, centred on larger screens ─── */
 .bd-app {
@@ -70,13 +77,25 @@ body.bd-body {
   padding: calc(18px + env(safe-area-inset-top, 0px)) 20px calc(24px + env(safe-area-inset-bottom, 0px));
 }
 .bd-screen.has-nav { padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px)); }
-.bd-screen.has-footer { padding-bottom: calc(128px + env(safe-area-inset-bottom, 0px)); }
+.bd-screen.has-footer { padding-bottom: calc(168px + env(safe-area-inset-bottom, 0px)); }
 .bd-footer {
   position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; width: min(100%, 480px); z-index: 20;
   padding: 16px 20px calc(18px + env(safe-area-inset-bottom, 0px));
   display: flex; flex-direction: column; gap: 10px;
   background: linear-gradient(180deg, rgba(253,247,240,0), var(--bd-cream) 38%);
 }
+
+/* ─── Hindi and Marathi ─── Devanagari needs room above and below the line, and tracking
+   breaks its conjuncts, so headline line-height opens up and letter-spacing is reset. */
+:lang(hi) .bd-display, :lang(mr) .bd-display,
+:lang(hi) .bd-title, :lang(mr) .bd-title,
+:lang(hi) .bd-serif, :lang(mr) .bd-serif { line-height: 1.3; letter-spacing: 0; }
+:lang(hi) .bd-display, :lang(mr) .bd-display { font-size: clamp(34px, 9vw, 44px); }
+:lang(hi) .bd-kicker, :lang(mr) .bd-kicker,
+:lang(hi) .bd-badge, :lang(mr) .bd-badge,
+:lang(hi) .bd-field label, :lang(mr) .bd-field label { letter-spacing: 0; text-transform: none; font-size: 13px; }
+:lang(hi) .bd-lead, :lang(mr) .bd-lead, :lang(hi) .bd-small, :lang(mr) .bd-small,
+:lang(hi) .bd-item, :lang(mr) .bd-item, :lang(hi) .bd-row, :lang(mr) .bd-row { line-height: 1.6; }
 
 /* ─── Type ─── */
 .bd-serif { font-family: var(--bd-font-display); font-weight: 400; letter-spacing: -0.3px; }
@@ -113,7 +132,7 @@ body.bd-body {
   background: #fff; color: var(--bd-plum); border: 1.5px solid var(--bd-line);
 }
 .bd-circ.like { width: 64px; height: 64px; background: var(--bd-pink); border-color: var(--bd-pink); }
-.bd-circ.sm { width: 40px; height: 40px; }
+.bd-circ.sm { width: 44px; height: 44px; }
 .bd-actions { display: flex; align-items: center; justify-content: center; gap: 18px; }
 
 /* ─── Badge / pills ─── */
@@ -124,10 +143,10 @@ body.bd-body {
 }
 .bd-pill {
   display: inline-flex; align-items: center; border: 1px solid var(--bd-line); border-radius: 999px;
-  padding: 8px 14px; font: 700 13px/1 var(--bd-font-body); color: var(--bd-plum); background: #fff; cursor: pointer;
+  min-height: 44px; padding: 10px 16px; font: 700 14px/1 var(--bd-font-body); color: var(--bd-plum); background: #fff; cursor: pointer;
 }
 .bd-pill.sel { background: var(--bd-plum); color: #fff; border-color: var(--bd-plum); }
-.bd-pill.static { cursor: default; }
+.bd-pill.static { cursor: default; min-height: 0; padding: 8px 14px; font-size: 13px; }
 .bd-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 
 /* ─── Hero card ─── */
@@ -196,7 +215,7 @@ body.bd-body {
   background: rgba(253, 247, 240, .95); border-bottom: 1px solid var(--bd-line); backdrop-filter: blur(8px);
 }
 .bd-slim .bd-serif { font-size: 19px; }
-.bd-back { all: unset; cursor: pointer; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--bd-plum); flex: none; }
+.bd-back { all: unset; cursor: pointer; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; color: var(--bd-plum); flex: none; }
 .bd-back:focus-visible { outline: 2px solid var(--bd-plum); }
 
 /* ─── Chat ─── */

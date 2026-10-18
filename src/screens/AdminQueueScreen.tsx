@@ -71,8 +71,9 @@ export function AdminQueueScreen({ kicker, title, approve, reject, items }: Admi
             </div>
             <span
               className="bd-pill static"
-              style={{ borderColor: TONE[item.tone], color: TONE[item.tone], fontSize: 10, letterSpacing: 1, textTransform: 'uppercase', fontWeight: 800, padding: '5px 9px' }}
+              style={{ borderColor: TONE[item.tone], borderWidth: 1.5, color: 'var(--bd-plum)', fontSize: 11, letterSpacing: 1, textTransform: 'uppercase', fontWeight: 800, padding: '5px 10px', gap: 6 }}
             >
+              <i style={{ width: 8, height: 8, borderRadius: '50%', background: TONE[item.tone], display: 'inline-block' }} />
               {item.status}
             </span>
           </div>
@@ -83,10 +84,10 @@ export function AdminQueueScreen({ kicker, title, approve, reject, items }: Admi
             </p>
           )}
           <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
-            <Button onClick={() => decide(item, approve)} style={{ minHeight: 42, padding: '10px 16px', fontSize: 14 }}>
+            <Button onClick={() => decide(item, approve)} style={{ minHeight: 44, padding: '10px 16px', fontSize: 14 }}>
               {approve}
             </Button>
-            <Button variant="ghost" onClick={() => decide(item, reject)} style={{ minHeight: 42, padding: '10px 16px', fontSize: 14, color: 'var(--bd-error)' }}>
+            <Button variant="ghost" onClick={() => decide(item, reject)} style={{ minHeight: 44, padding: '10px 16px', fontSize: 14, color: 'var(--bd-error)' }}>
               {reject}
             </Button>
           </div>

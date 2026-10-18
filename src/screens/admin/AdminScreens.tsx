@@ -110,7 +110,7 @@ export function AdminUsersScreen() {
               </span>
             </span>
             {u.suspended && (
-              <span className="bd-pill static" style={{ borderColor: 'var(--bd-error)', color: 'var(--bd-error)', fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, padding: '5px 9px' }}>
+              <span className="bd-pill static" style={{ borderColor: 'var(--bd-error)', color: 'var(--bd-error)', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, padding: '5px 10px' }}>
                 Suspended
               </span>
             )}
