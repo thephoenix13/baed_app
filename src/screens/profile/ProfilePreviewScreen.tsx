@@ -3,12 +3,12 @@ import { useProfileDraft } from '@/stores/profile-draft-store';
 import { useFilters } from '@/stores/filters-store';
 import { getDefaultFilters } from '@/modules/discovery/services/discovery.service';
 import { useUIStore } from '@/stores/ui-store';
-import { Button, Dots, Footer, Item, Kicker, Pill, Screen, Section, StepHeader, VerifiedBadge } from '@/ui/kit';
+import { Button, Dots, Footer, Item, Kicker, Pill, PortraitPhoto, Screen, Section, StepHeader, VerifiedBadge } from '@/ui/kit';
 
 export function ProfilePreviewScreen() {
   const navigate = useNavigate();
   const addToast = useUIStore((s) => s.addToast);
-  const { name, age, city, occupation, bio, intent, interests, showMe } = useProfileDraft();
+  const { name, age, city, occupation, bio, intent, interests, showMe, photos } = useProfileDraft();
   const setFilters = useFilters((s) => s.setFilters);
 
   return (
@@ -20,7 +20,7 @@ export function ProfilePreviewScreen() {
           This is how people see you.
         </h1>
 
-        <div className="bd-portrait v0 bd-photo" style={{ height: 340, marginTop: 20 }}>
+        <PortraitPhoto id="you" src={photos[0]} label={`${name || 'You'}, your main photo`} className="bd-photo" style={{ height: 340, marginTop: 20 }}>
           <VerifiedBadge />
           <div className="cap">
             <div className="bd-serif" style={{ fontSize: 34, lineHeight: 1 }}>
@@ -30,7 +30,7 @@ export function ProfilePreviewScreen() {
               {[occupation, city].filter(Boolean).join(' · ')}
             </div>
           </div>
-        </div>
+        </PortraitPhoto>
 
         <Section title="Looking for">
           <Item title={intent || 'Not set'} marker={false} />

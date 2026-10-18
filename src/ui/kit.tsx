@@ -120,8 +120,8 @@ export function variantFor(key: string) {
   return VARIANTS[h % VARIANTS.length];
 }
 
-export function Avatar({ seed, size, ring, label = 'Profile photo' }: { seed: string; size?: 'lg'; ring?: boolean; label?: string }) {
-  const src = avatarPhoto(seed);
+export function Avatar({ seed, size, ring, label = 'Profile photo', src: srcProp }: { seed: string; size?: 'lg'; ring?: boolean; label?: string; src?: string }) {
+  const src = srcProp ?? avatarPhoto(seed);
   const [failed, setFailed] = useState(false);
   return (
     <div

@@ -21,7 +21,7 @@ export class ApiError extends Error {
   }
 }
 
-const demoTools = import.meta.env.DEV || import.meta.env.VITE_DEMO_TOOLS === 'true';
+export const demoTools = import.meta.env.DEV || import.meta.env.VITE_DEMO_TOOLS === 'true';
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function call<T>(name: string, run: () => T): Promise<T> {

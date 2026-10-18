@@ -12,12 +12,15 @@ interface ProfileDraft {
   showMe: string[];
   city: string;
   nearby: boolean;
-  photos: number;
+  photos: string[]; // object URLs for the photos chosen, main photo first
   bio: string;
   occupation: string;
   intent: string;
   interests: string[];
-  set: (patch: Partial<Omit<ProfileDraft, 'set' | 'reset'>>) => void;
+  set: (patch: Partial<Omit<ProfileDraft, 'set' | 'reset' | 'addPhotos' | 'removePhoto' | 'makeMainPhoto'>>) => void;
+  addPhotos: (urls: string[]) => void;
+  removePhoto: (index: number) => void;
+  makeMainPhoto: (index: number) => void;
   reset: () => void;
 }
 
@@ -28,15 +31,36 @@ const empty = {
   showMe: [] as string[],
   city: '',
   nearby: false,
-  photos: 0,
+  photos: [] as string[],
   bio: '',
   occupation: '',
   intent: '',
   interests: [] as string[],
 };
 
-export const useProfileDraft = create<ProfileDraft>((set) => ({
+export const MAX_PHOTOS = 6;
+
+export const useProfileDraft = create<ProfileDraft>((set, get) => ({
   ...empty,
   set: (patch) => set(patch),
-  reset: () => set(empty),
+  addPhotos: (urls) => {
+    const room = MAX_PHOTOS - get().photos.length;
+    urls.slice(room).forEach((u) => URL.revokeObjectURL(u)); // more than fit
+    set((s) => ({ photos: [...s.photos, ...urls.slice(0, Math.max(room, 0))] }));
+  },
+  removePhoto: (index) => {
+    const url = get().photos[index];
+    if (url) URL.revokeObjectURL(url);
+    set((s) => ({ photos: s.photos.filter((_, i) => i !== index) }));
+  },
+  makeMainPhoto: (index) =>
+    set((s) => {
+      const next = [...s.photos];
+      const [picked] = next.splice(index, 1);
+      return { photos: [picked, ...next] };
+    }),
+  reset: () => {
+    get().photos.forEach((u) => URL.revokeObjectURL(u));
+    set({ ...empty, photos: [] });
+  },
 }));

@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { demoTools } from '@/lib/api';
+import { useVerificationStore } from '@/stores/verification-store';
 import { Icon } from '@/ui/Icon';
 import { Kicker, Screen } from '@/ui/kit';
 
@@ -12,6 +14,8 @@ export function ProcessingScreen() {
   const [stage, setStage] = useState(0);
   // Demo only: add ?fail to the URL to see the failed state until the real provider is connected.
   const willFail = new URLSearchParams(search).has('fail');
+  const ready = useVerificationStore((s) => !!s.id && !!s.selfie);
+  const clearPhotos = useVerificationStore((s) => s.clear);
 
   useEffect(() => {
     const timer = window.setInterval(() => setStage((s) => s + 1), STAGE_MS);
@@ -22,12 +26,17 @@ export function ProcessingScreen() {
 
   useEffect(() => {
     if (stage >= STAGES.length) {
+      // The check is done: the ID photo and selfie are discarded, only the result is kept
+      clearPhotos();
       navigate('/verify/result', {
         replace: true,
         state: willFail ? { success: false, reason: 'The selfie did not match the photo on the ID.' } : { success: true },
       });
     }
-  }, [stage, navigate, willFail]);
+  }, [stage, navigate, willFail, clearPhotos]);
+
+  // Nothing to check without both photos
+  if (!ready && !demoTools) return <Navigate to="/verify/id" replace />;
 
   return (
     <Screen tint="var(--bd-peach)">

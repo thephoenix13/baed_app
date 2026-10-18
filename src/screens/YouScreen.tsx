@@ -8,7 +8,7 @@ export function YouScreen() {
   const navigate = useNavigate();
   const logout = useAuthStore((s) => s.logout);
   const isVerified = useAuthStore((s) => s.isVerified);
-  const { name, age, city } = useProfileDraft();
+  const { name, age, city, photos } = useProfileDraft();
 
   return (
     <Screen tint="var(--bd-pink-pale)" nav>
@@ -17,7 +17,7 @@ export function YouScreen() {
       </h1>
 
       <div className="bd-hero plum" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <Avatar seed={name || 'you'} size="lg" ring />
+        <Avatar seed={name || 'you'} size="lg" ring src={photos[0]} label={name ? `${name}, your photo` : 'Your photo'} />
         <div style={{ minWidth: 0 }}>
           <div className="bd-serif" style={{ fontSize: 28, lineHeight: 1.05 }}>
             {name || 'Your profile'}
