@@ -62,7 +62,7 @@ export function YouScreen() {
         </Button>
       </div>
       <div style={{ textAlign: 'center', marginTop: 18 }}>
-        <Kicker>Bae'd v1.0.0</Kicker>
+        <Kicker>{`Bae'd prototype · build ${__BUILD_ID__}`}</Kicker>
       </div>
     </Screen>
   );
