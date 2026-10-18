@@ -1,11 +1,10 @@
 /**
- * Offline Banner Component
- *
- * Shows a banner when the user is offline.
+ * Offline banner: shown across the top while the device has no connection.
  */
 
 import { useState, useEffect } from 'react';
 import { isOffline, onConnectionChange } from '@/lib/pwa';
+import { Icon } from '@/ui/Icon';
 
 export function OfflineBanner() {
   const [offline, setOffline] = useState(isOffline());
@@ -13,7 +12,7 @@ export function OfflineBanner() {
   useEffect(() => {
     const unsubscribe = onConnectionChange(
       () => setOffline(false),
-      () => setOffline(true)
+      () => setOffline(true),
     );
     return unsubscribe;
   }, []);
@@ -21,10 +20,28 @@ export function OfflineBanner() {
   if (!offline) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-amber text-white px-4 py-2 text-center">
-      <p className="text-body font-semibold">
-        You're offline. Some features may not be available.
-      </p>
+    <div
+      role="status"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: 'min(100%, 480px)',
+        zIndex: 90,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        padding: 'calc(8px + env(safe-area-inset-top, 0px)) 16px 8px',
+        background: 'var(--bd-peach)',
+        color: 'var(--bd-plum)',
+        fontSize: 13,
+        fontWeight: 600,
+      }}
+    >
+      <Icon name="warn" size={16} />
+      You're offline. Some things won't work until you reconnect.
     </div>
   );
 }

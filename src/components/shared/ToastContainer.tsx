@@ -1,24 +1,12 @@
 /**
- * Toast Container Component
- *
- * Renders active toasts from the UI store.
+ * Toasts: quiet pills at the top of the screen, from the UI store.
  */
 
 import { useUIStore } from '@/stores/ui-store';
+import { Icon } from '@/ui/Icon';
+import type { IconName } from '@/ui/Icon';
 
-const toastIcons: Record<string, string> = {
-  success: '✓',
-  error: '✕',
-  warning: '⚠',
-  info: 'ℹ',
-};
-
-const toastColors: Record<string, string> = {
-  success: 'border-verified-green bg-green-50',
-  error: 'border-error bg-red-50',
-  warning: 'border-amber bg-amber-50',
-  info: 'border-plum bg-pink-pale',
-};
+const ICON: Record<string, IconName> = { success: 'check', error: 'x', warning: 'warn', info: 'bell' };
 
 export function ToastContainer() {
   const toasts = useUIStore((s) => s.toasts);
@@ -27,33 +15,62 @@ export function ToastContainer() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
+    <div
+      aria-live="polite"
+      style={{
+        position: 'fixed',
+        top: 'calc(12px + env(safe-area-inset-top, 0px))',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: 'min(calc(100% - 28px), 452px)',
+        zIndex: 80,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8,
+      }}
+    >
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className={`toast ${toastColors[toast.type] || ''}`}
-          role="alert"
+          role={toast.type === 'error' ? 'alert' : 'status'}
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 12,
+            background: 'var(--bd-plum)',
+            color: '#fff',
+            borderRadius: 20,
+            padding: '12px 14px',
+            boxShadow: 'var(--bd-shadow-hero)',
+          }}
         >
-          <div className="flex items-start gap-3">
-            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-white flex items-center justify-center text-sm font-bold">
-              {toastIcons[toast.type]}
-            </span>
-            <div className="flex-1 min-w-0">
-              <p className="text-body font-semibold text-ink">{toast.title}</p>
-              {toast.message && (
-                <p className="text-body text-muted text-sm mt-0.5">{toast.message}</p>
-              )}
-            </div>
-            <button
-              onClick={() => removeToast(toast.id)}
-              className="flex-shrink-0 text-muted hover:text-ink"
-              aria-label="Dismiss"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
+          <span
+            style={{
+              width: 24,
+              height: 24,
+              borderRadius: '50%',
+              flex: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: toast.type === 'error' ? 'var(--bd-error)' : 'var(--bd-pink)',
+              color: toast.type === 'error' ? '#fff' : 'var(--bd-plum)',
+            }}
+          >
+            <Icon name={ICON[toast.type] ?? 'bell'} size={14} strokeWidth={2.6} />
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontWeight: 700, fontSize: 14 }}>{toast.title}</div>
+            {toast.message && <div style={{ fontSize: 13, opacity: 0.8, marginTop: 2 }}>{toast.message}</div>}
           </div>
+          <button
+            type="button"
+            onClick={() => removeToast(toast.id)}
+            aria-label="Dismiss"
+            style={{ all: 'unset', cursor: 'pointer', color: '#fff', opacity: 0.7, padding: 4 }}
+          >
+            <Icon name="x" size={16} />
+          </button>
         </div>
       ))}
     </div>
