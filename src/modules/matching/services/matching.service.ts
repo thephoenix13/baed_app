@@ -128,7 +128,7 @@ export function passProfile(fromUserId: string, toUserId: string): void {
  * Create a match between two users.
  */
 function createMatch(user1Id: string, user2Id: string): Match {
-  const matchId = `match-${Date.now()}`;
+  const matchId = `match-${Date.now()}-${matches.size}`;
 
   const match: Match = {
     id: matchId,
@@ -155,6 +155,18 @@ function createMatch(user1Id: string, user2Id: string): Match {
   };
 
   matches.set(matchId, match);
+  return match;
+}
+
+/**
+ * Demo seed: create an existing match without a like. Used to show chats and new matches on first load.
+ */
+export function seedMatch(userId: string, otherUserId: string, matchedAt: Date): Match {
+  const existing = getUserMatches(userId).find((m) => m.user1Id === otherUserId || m.user2Id === otherUserId);
+  if (existing) return existing;
+  const match = createMatch(userId, otherUserId);
+  match.matchedAt = matchedAt;
+  markProfileAsSeen(otherUserId);
   return match;
 }
 

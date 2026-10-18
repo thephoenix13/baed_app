@@ -13,6 +13,8 @@ import { InstallPrompt } from '@/components/pwa/InstallPrompt';
 import { OfflineBanner } from '@/components/pwa/OfflineBanner';
 import { ToastContainer } from '@/components/shared/ToastContainer';
 import { FloatingNav } from '@/ui/kit';
+import { seedDemoData } from '@/lib/demo-seed';
+import { unreadFor, useChatStore } from '@/stores/chat-store';
 import { AppErrorBoundary, NotFoundScreen } from '@/ui/states';
 
 import { SplashScreen } from '@/screens/SplashScreen';
@@ -43,6 +45,9 @@ import { ChatScreen } from '@/screens/ChatScreen';
 import { YouScreen } from '@/screens/YouScreen';
 import { SettingsTopicScreen } from '@/screens/SettingsTopicScreen';
 import { AdminModerationScreen, AdminVerificationScreen } from '@/screens/AdminQueueScreen';
+
+// Demo conversations so Matches and Chats are not empty on first load
+seedDemoData();
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 5 * 60 * 1000 } },
@@ -98,6 +103,7 @@ function RouteEffects() {
 }
 
 function Shell() {
+  const unreadChats = useChatStore((s) => Object.keys(s.threads).some((id) => unreadFor(s.threads, s.lastRead, id) > 0));
   const { pathname, state } = useLocation() as ReturnType<typeof useLocation> & { state: { newMatchId?: string } | null };
   const showNav = NAV_ROUTES.includes(pathname) && !(pathname === '/matches' && state?.newMatchId);
 
@@ -153,7 +159,7 @@ function Shell() {
 
         <Route path="*" element={<NotFoundScreen />} />
       </Routes>
-      {showNav && <FloatingNav />}
+      {showNav && <FloatingNav unreadChats={unreadChats} />}
     </div>
   );
 }

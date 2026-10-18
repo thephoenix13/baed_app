@@ -6,15 +6,21 @@ import { useMatch } from '@/lib/queries';
 import { ErrorPanel, Skeleton } from '@/ui/states';
 import { DEMO_USER_ID } from '@/lib/session';
 import { useUIStore } from '@/stores/ui-store';
+import { useChatStore } from '@/stores/chat-store';
 import { Icon } from '@/ui/Icon';
 import { Avatar, BackButton, Button, Row, Sheet, VerifiedBadge } from '@/ui/kit';
 import { REPORT_REASONS } from './ProfileDetailScreen';
 
-interface Message {
-  id: string;
-  text: string;
-  from: 'me' | 'them';
+const EMPTY: never[] = [];
+
+const dayKey = (at: number) => new Date(at).toDateString();
+function dayLabel(at: number) {
+  const days = Math.round((new Date(new Date().toDateString()).getTime() - new Date(new Date(at).toDateString()).getTime()) / 86_400_000);
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  return new Date(at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 }
+const clock = (at: number) => new Date(at).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
 
 // Messages that ask for money or push the chat off the app get a calm warning.
 const RISKY = /(₹|rs\.?\s?\d|\bupi\b|\bpaytm\b|\bgpay\b|bank|\botp\b|send (me )?money|whatsapp|telegram|\bgift card)/i;
@@ -25,7 +31,10 @@ export function ChatScreen() {
   const navigate = useNavigate();
   const addToast = useUIStore((s) => s.addToast);
   const { data: match, isPending, error, refetch } = useMatch(matchId);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const messages = useChatStore((s) => s.threads[matchId]) ?? EMPTY;
+  const sendMessage = useChatStore((s) => s.send);
+  const receiveMessage = useChatStore((s) => s.receive);
+  const markRead = useChatStore((s) => s.markRead);
   const [draft, setDraft] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
@@ -38,8 +47,10 @@ export function ChatScreen() {
     [],
   );
   useEffect(() => {
-    endRef.current?.scrollIntoView({ block: "end" });
-  }, [messages]);
+    endRef.current?.scrollIntoView({ block: 'end' });
+    // Whatever is on screen counts as read
+    markRead(matchId);
+  }, [messages, matchId, markRead]);
 
   const risky = useMemo(() => messages.some((m) => RISKY.test(m.text)), [messages]);
 
@@ -69,13 +80,11 @@ export function ChatScreen() {
     e.preventDefault();
     const text = draft.trim();
     if (!text) return;
-    setMessages((prev) => [...prev, { id: `m-${Date.now()}`, text, from: 'me' }]);
+    sendMessage(matchId, text);
     setDraft('');
+    // Demo reply until real chat exists
     timer.current = window.setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { id: `r-${Date.now()}`, text: REPLIES[Math.floor(Math.random() * REPLIES.length)], from: 'them' },
-      ]);
+      receiveMessage(matchId, REPLIES[Math.floor(Math.random() * REPLIES.length)]);
     }, 1800);
   };
 
@@ -117,11 +126,25 @@ export function ChatScreen() {
           </div>
         )}
 
-        {messages.map((m) => (
-          <div key={m.id} className={`bd-bubble ${m.from === 'me' ? 'out' : 'in'}`}>
-            {m.text}
-          </div>
-        ))}
+        {messages.map((m, i) => {
+          const newDay = i === 0 || dayKey(m.at) !== dayKey(messages[i - 1].at);
+          const endOfRun = i === messages.length - 1 || messages[i + 1].from !== m.from || dayKey(messages[i + 1].at) !== dayKey(m.at);
+          return (
+            <div key={m.id}>
+              {newDay && (
+                <div className="bd-kicker" style={{ textAlign: 'center', margin: '14px 0 6px' }}>
+                  {dayLabel(m.at)}
+                </div>
+              )}
+              <div className={`bd-bubble ${m.from === 'me' ? 'out' : 'in'}`}>{m.text}</div>
+              {endOfRun && (
+                <div className="bd-small bd-muted" style={{ fontSize: 11, textAlign: m.from === 'me' ? 'right' : 'left', margin: '0 4px 4px' }}>
+                  {clock(m.at)}
+                </div>
+              )}
+            </div>
+          );
+        })}
 
         {risky && (
           <div className="bd-warn" role="alert">
