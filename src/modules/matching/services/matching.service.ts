@@ -6,11 +6,24 @@
 
 import type { Match, Like, MatchResult, MatchProfile } from '../types/matching.types';
 import { markProfileAsSeen } from '../../discovery/services/discovery.service';
+import { DEMO_USER_ID } from '../../../lib/session';
 
 // In-memory storage (would be database in production)
 const likes = new Map<string, Like>();
 const matches = new Map<string, Match>();
 const passes = new Set<string>(); // `${fromUserId}-${toUserId}`
+
+// Demo seed: the first three people have already liked the demo user, so a like on
+// them makes a match and the matches and chat screens can be tried without a backend.
+['user-001', 'user-002', 'user-003'].forEach((fromUserId) => {
+  likes.set(`${fromUserId}-${DEMO_USER_ID}`, {
+    id: `seed-${fromUserId}`,
+    fromUserId,
+    toUserId: DEMO_USER_ID,
+    likedAt: new Date(),
+    isSuperLike: false,
+  });
+});
 
 // Mock user profiles for matches
 const MOCK_PROFILES: Record<string, MatchProfile> = {

@@ -136,7 +136,7 @@ export function getDiscoveryFeed(
   limit: number = 10
 ): DiscoveryFeed {
   // Filter out seen profiles
-  let candidates = MOCK_CANDIDATES.filter((c) => !seenProfiles.has(c.id));
+  let candidates = MOCK_CANDIDATES.filter((c) => !seenProfiles.has(c.id) && !seenProfiles.has(c.userId));
 
   // Apply filters if provided
   if (filters) {
